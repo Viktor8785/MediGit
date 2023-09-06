@@ -1,0 +1,22 @@
+<section class="sheduler">
+    <div class="sheduler__header">
+        <h2 class="sheduler__title">Расписание специалистов</h2>
+        <div class="sheduler__button-wrapper">
+            <button class="sheduler__button"  [ngClass]="{'sheduler__button--active': button0}" (click)="toggleButtonIndex0($event)">1 день</button>
+            <button class="sheduler__button" [ngClass]="{'sheduler__button--active': button1}" (click)="toggleButtonIndex1($event)">2 дня</button>
+            <button class="sheduler__button" [ngClass]="{'sheduler__button--active': button2}" (click)="toggleButtonIndex2($event)">Неделя</button>
+        </div>
+    </div>
+    <div class="sheduler__body" (scroll)="headScrollBack($event)">
+        <div class="sheduler__resource" *ngFor="let resource of resources">
+            <div class="sheduler__wrapper" #head>
+                <div class="sheduler__resource-date">{{resource.date | shrinkDate}}</div>
+                <div class="sheduler__resource-name">{{resource.resourceName}}</div>
+                <div class="sheduler__resource-spec">{{resource.resourceSpec}}</div>
+                <div class="sheduler__resource-hosp">{{resource.resourceHospital}}</div>
+                <div class="sheduler__resource-work">{{getWorkHours(resource)}}</div>  
+            </div>
+            <app-content [resource] = "resource"></app-content>
+        </div>
+    </div>
+</section>

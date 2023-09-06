@@ -1,0 +1,66 @@
+.content {
+
+}
+
+.content__quote {
+    display: flex;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.content_sheduler {
+    //margin-top: 150px;
+    position: relative;
+}
+
+.content__quote-dn,
+.content__quote-ln,
+.content__quote-do,
+.content__quote-hm,
+.content__quote-da,
+.content__quote-ba
+ {
+    display: flex;
+    height: 60px;
+    align-items: center;
+    justify-content: center;
+    background-color: #7c7b7b;
+    color: #000000;
+    border-bottom: 1px dotted #000000;   
+}
+
+.content__quote-hl,
+.content__quote-il {
+    display: flex;
+    height: 120px;
+    align-items: center;
+    justify-content: center;
+    background-color: #ad2222;
+    color: #000000;   
+}
+
+.content__quote-ap {
+    display: flex;
+    height: 30px;
+    padding-left: 10px;
+    align-items: center;
+    justify-content: left;
+    background-color: #ffffff;
+    color: #000000; 
+    border-bottom: 1px dotted #000000;    
+}
+
+.content__quote-ispatient {
+    display: flex;
+    height: 30px;
+    padding-left: 10px;
+    align-items: center;
+    justify-content: left;
+    background-color: red;
+    color: #000000; 
+    border-bottom: 1px dotted #000000;    
+}
+

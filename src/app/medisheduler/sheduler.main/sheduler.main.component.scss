@@ -1,0 +1,16 @@
+.page {
+    width: 100vw;
+    height: 100vh;
+    background-color: lightgray;
+}
+
+.page__header {
+    width: 100%;
+    height: 30px;
+    background-color: black;
+}
+
+.page__body {
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+}

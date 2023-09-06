@@ -1,0 +1,110 @@
+.sheduler {
+    width: 100%;
+}
+
+.sheduler__header {
+    display: flex;
+    height: 56px;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 1px grey;
+}
+
+.sheduler__title {
+    margin: 0;
+    margin-left: 30px;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.sheduler__button-wrapper {
+    margin-right: 30px;
+}
+
+.sheduler__button {
+    width: 70px;
+    height: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    border-radius: 4px;
+    background-color: green;
+    background-image: linear-gradient(#ffffff, green);
+    &--active {
+        background-image: none;
+        outline: inset 1px; 
+    }
+}
+
+.sheduler__body {
+    position: absolute;
+    top: 100px;
+    left: 333px;
+    width: calc(100vw - 333px);
+    height: calc(100vh - 56px - 30px - 15px);
+    //background-color: #ffffff;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.sheduler__resource {
+    min-width: 180px;
+    margin-left: 10px;
+}
+
+.sheduler__wrapper {
+    position: sticky;
+    min-width: 180px;
+    z-index: 1;
+}
+
+.sheduler__resource-date {
+    display: flex;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    background-color: #3d3c3c;
+    color: #ffffff;
+}
+
+.sheduler__resource-name {
+    display: flex;
+    min-height: 30px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: #999898;
+    color: #ffffff;
+}
+
+.sheduler__resource-spec {
+    display: flex;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    text-transform: lowercase;
+    font-style: italic;
+    background-color: #999898;
+    color: #ffffff;
+    border-top: 1px solid #dfdfdf;
+}
+
+.sheduler__resource-hosp {
+    display: flex;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    background-color: #6d9db3;
+    color: #ffffff;
+}
+
+.sheduler__resource-work {
+    display: flex;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    background-color: #6db376;
+    color: #ffffff;
+}
