@@ -1,7 +1,7 @@
 <section class="resources">
-    <div class="resources__header">
+    <div class="resources__header" dropdown container="div" placement="bottom" [isDisabled]="patientDisabled">
         <p class="resources__title">ПАЦИЕНТ</p>
-        <button class="resources__patient-button">
+        <button class="resources__patient-button" dropdownToggle [ngClass]="{'resources__patient-button--disabled': patientDisabled}">
             <svg class="resources__svg" width="24px" height="24px" viewBox="0 0 24 24" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/">
             <g transform="translate(0 -1028.4)">
             <path d="m12 0c-0.405 0-0.805 0.060326-1.188 0.15625-0.224 0.05678-0.44 0.13135-0.656 0.21875-0.083 0.03401-0.1679 0.05534-0.2498 0.09375-0.034 0.01583-0.06 0.04594-0.0937 0.0625-0.2032 0.10058-0.4021 0.21704-0.5937 0.34375-0.027 0.0174-0.0671 0.01339-0.0938 0.03125-0.0563 0.03864-0.101 0.08419-0.1562 0.12495-0.1569 0.1126-0.3216 0.216-0.4688 0.3438-0.1342 0.1207-0.2494 0.2724-0.375 0.4062-0.4251 0.4359-0.7936 0.8971-1.0938 1.4376-0.5154 0.9034-0.9002 1.9205-1.0624 2.9687-0.0783-0.0165-0.1501-0.0224-0.2188 0-0.5251 0.171-0.6545 1.1685-0.3125 2.2187 0.2007 0.6163 0.5346 1.1015 0.875 1.375 0.4573 1.7778 1.4257 3.2598 2.6875 4.1878v1.031l-1 1-2 1c-1.6173 0.801-3.2284 1.605-4.8438 2.406-0.89513 0.54-1.2415 1.6-1.1562 2.594 0.041664 0.626-0.18448 1.427 0.4375 1.844 0.5909 0.304 1.2959 0.106 1.9375 0.156 1.8766-0.001 3.7484 0 5.625 0 2.669 0.001 5.331 0 8 0 2.367 0 4.727 0.004 7.094 0 0.768-0.054 0.981-0.865 0.906-1.5 0.014-0.932 0.069-1.976-0.656-2.688-0.592-0.602-1.434-0.84-2.156-1.25-1.061-0.525-2.128-1.037-3.188-1.562l-2-1-1-1v-1.031c1.262-0.928 2.23-2.41 2.688-4.1878 0.34-0.2736 0.674-0.7588 0.874-1.375 0.342-1.0502 0.213-2.0477-0.312-2.2187-0.069-0.0224-0.14-0.0165-0.219 0-0.162-1.0482-0.547-2.0653-1.062-2.9687-0.3-0.5405-0.669-1.0017-1.094-1.4376-0.126-0.1338-0.241-0.2855-0.375-0.4062-0.006-0.0055-0.025 0.0055-0.031 0-0.392-0.3499-0.827-0.61894-1.281-0.84375-0.115-0.05622-0.227-0.10854-0.344-0.15625-0.084-0.03401-0.165-0.06426-0.25-0.09375-0.255-0.08848-0.516-0.17356-0.782-0.21875-0.02-0.003405-0.042 0.003148-0.062 0-0.249-0.039144-0.495-0.06525-0.75-0.0625z" transform="translate(0 1028.4)"/>
@@ -11,43 +11,101 @@
             <svg  class="resources__svg2" width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z"/>
             </svg>
         </button>
+        <ul *dropdownMenu class="resources__patient-dropdown-menu"
+            role="menu" aria-labelledby="button-basic">
+            <li role="menuitem" class="resources__dropdown-item" (click)="exitPatient()">
+                <svg width="24px" height="24px" class="resources__svg7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g id="Menu / Close_SM">
+                    <path id="Vector" d="M16 16L12 12M12 12L8 8M12 12L16 8M12 12L8 16" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </g>
+                </svg>
+                <p class="resources__item-text">Завершить работу с пациентом</p>
+            </li>
+        </ul>
     </div>
     <div class="resources__input-wrapper">
-        <input type="text" class="resources__input">
+        <input type="text" class="resources__input" [(ngModel)]="patientSelected" [typeahead]="patientNameSearch" [typeaheadMinLength]="3"
+        (typeaheadOnSelect)="selectPatient()" [optionsListTemplate]="customListTemplate" placeholder="Введите текст для поиска">
         <div class="resources__patient-search">
             <svg class="resources__svg3" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M14.9536 14.9458L21 21M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
         </div>
     </div>
+    <div class="resource__patient-desk" [ngClass]="{'resource__patient-desk--active': patientActive}">
+        <p class="resource__patient-name">{{patientName}}</p>
+        <p class="resource__patient-birthdate">{{patientBirthday}}</p>
+        <p class="resource__patient-oms">{{patientOms}}</p>
+    </div>
     <div class="resources__delimeter"></div>
     <p class="resources__date">ДАТА ЗАПИСИ</p>
-    <div class="resources__input-wrapper">
-        <input type="text" class="resources__input-date">
-        <div class="resources__date-button">
-            <svg class="resources__svg4" fill="#000000" width="24px" height="24px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                <title>calendar</title>
-                <path d="M27 31h-22c-1.104 0-2-0.896-2-2v-22c0-1.105 0.896-2 2-2h2v1c0 1.657 1.343 3 3 3s3-1.343 3-3v-1h6v1c0 1.657 1.344 3 3 3s3-1.343 3-3v-1h2c1.104 0 2 0.895 2 2v22c0 1.104-0.896 2-2 2zM27 12h-22v17h22v-17zM10 17h-3v-3h3v3zM10 22h-3v-3h3v3zM10 27h-3v-3h3v3zM15 17h-3v-3h3v3zM15 22h-3v-3h3v3zM15 27h-3v-3h3v3zM20 17h-3v-3h3v3zM20 22h-3v-3h3v3zM20 27h-3v-3h3v3zM25 17h-3v-3h3v3zM25 22h-3v-3h3v3zM25 27h-3v-3h3v3zM21.969 8c-1.088 0-1.969-0.882-1.969-1.969v-2.062c0-1.088 0.881-1.969 1.969-1.969s1.969 0.881 1.969 1.969v2.062c0 1.087-0.881 1.969-1.969 1.969zM9.969 8c-1.088 0-1.969-0.882-1.969-1.969v-2.062c0-1.088 0.881-1.969 1.969-1.969s1.969 0.881 1.969 1.969v2.062c0 1.087-0.882 1.969-1.969 1.969z"></path>
+    <div class="resource__calendar-wrapper">
+        <div class="resources__input-wrapper">
+            <input type="text" class="resources__input-date" [value]="currentDateShown" placeholder="ДД.ММ.ГГГГ">
+            <div class="resources__date-button" (click)="showDatepicker()" [ngClass]="{'resources__date-button--disabled': resourceDisabled}">
+                <svg class="resources__svg4" fill="#000000" width="24px" height="24px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                    <title>calendar</title>
+                    <path d="M27 31h-22c-1.104 0-2-0.896-2-2v-22c0-1.105 0.896-2 2-2h2v1c0 1.657 1.343 3 3 3s3-1.343 3-3v-1h6v1c0 1.657 1.344 3 3 3s3-1.343 3-3v-1h2c1.104 0 2 0.895 2 2v22c0 1.104-0.896 2-2 2zM27 12h-22v17h22v-17zM10 17h-3v-3h3v3zM10 22h-3v-3h3v3zM10 27h-3v-3h3v3zM15 17h-3v-3h3v3zM15 22h-3v-3h3v3zM15 27h-3v-3h3v3zM20 17h-3v-3h3v3zM20 22h-3v-3h3v3zM20 27h-3v-3h3v3zM25 17h-3v-3h3v3zM25 22h-3v-3h3v3zM25 27h-3v-3h3v3zM21.969 8c-1.088 0-1.969-0.882-1.969-1.969v-2.062c0-1.088 0.881-1.969 1.969-1.969s1.969 0.881 1.969 1.969v2.062c0 1.087-0.881 1.969-1.969 1.969zM9.969 8c-1.088 0-1.969-0.882-1.969-1.969v-2.062c0-1.088 0.881-1.969 1.969-1.969s1.969 0.881 1.969 1.969v2.062c0 1.087-0.882 1.969-1.969 1.969z"></path>
+                    </svg>
+                <svg  class="resources__svg5" width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z"/>
                 </svg>
-            <svg  class="resources__svg5" width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z"/>
-            </svg>
+            </div>
+        </div>
+        <div class="inline-datepicker" [ngClass]="{'inline-datepicker--active': datepickerShow}">
+            <bs-datepicker-inline [bsValue]="currentDate" [minDate]="minDate" [dateCustomClasses]="dateCustomClasses"
+            [bsConfig]="{ dateInputFormat: 'DD.MM.YYYY', containerClass: 'theme-blue' }" (bsValueChange)="onDateValueChanged($event)"
+            [dateTooltipTexts]="dateToolTipText">
+            </bs-datepicker-inline>
+            <div class="resource__input-buttons">
+                <div class="resource__input-buttons-wrapper">
+                    <button class="resource__input-button-cancel" (click)="clickCancelButton()">Отменить</button>
+                    <button class="resource__input-button-ok" (click)="clickOkButton()">Ок</button>
+                </div>
+            </div>
         </div>
     </div>
     <div class="resources__delimeter"></div>
-    <div class="resources__spec">
+    <div class="resources__spec" dropdown container="div" placement="bottom">
         <svg  class="resources__svg6" width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z"/>
         </svg>
         <p class="resources__title-spec">СПЕЦИАЛИСТЫ</p>
-        <p class="resources__spec-count">(10/200)</p>
-        <button class="resources__patient-button">
+        <p class="resources__spec-count">({{resourcesChecked}}/{{resources.length}})</p>
+        <button class="resources__patient-button" id="button-basic" dropdownToggle>
             <svg  class="resources__svg7" fill="#ffffff" width="24px" height="24px" viewBox="0 -2.5 29 29" xmlns="http://www.w3.org/2000/svg"><path d="m11.2 24 6.4-4v-6.4l11.2-13.6h-28.8l11.2 13.6z"/>
             </svg>
             <svg  class="resources__svg2" width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z"/>
             </svg>
         </button>
+        <ul id="dropdown-basic" *dropdownMenu class="resources__dropdown-menu"
+            role="menu" aria-labelledby="button-basic">
+            <li role="menuitem" class="resources__dropdown-item" (click)="checkAll()">
+                <svg width="24px" height="24px" class="resources__svg7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g id="Interface / Check">
+                    <path id="Vector" d="M6 12L10.2426 16.2426L18.727 7.75732" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </g>
+                </svg>
+                <p class="resources__item-text">Выбрать все</p>
+            </li>
+            <li role="menuitem" class="resources__dropdown-item" (click)="unCheckAll()">
+                <svg width="24px" height="24px" class="resources__svg7" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g id="Menu / Close_SM">
+                    <path id="Vector" d="M16 16L12 12M12 12L8 8M12 12L16 8M12 12L8 16" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </g>
+                </svg>
+                <p class="resources__item-text">Отменить все выбранные</p>
+            </li>
+        </ul>
     </div>
     <div class="resources__input-wrapper">
-        <input type="text" class="resources__input">
+        <input type="text" class="resources__input-resource" [(ngModel)]="resourceSelected" [typeahead]="resourcesNameSearch" [typeaheadMinLength]="3"
+        (typeaheadOnSelect)="selectResource()" [optionsListTemplate]="customListTemplate" placeholder="Введите текст для поиска">
+        <div class="resource__svg-wrapper" (click)="deleteSearchName()">
+            <svg width="24px" height="24px" class="resources__svg8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="Menu / Close_SM">
+                <path id="Vector" d="M16 16L12 12M12 12L8 8M12 12L16 8M12 12L8 16" stroke="red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </g>
+            </svg>
+        </div>
         <div class="resources__patient-search">
             <svg class="resources__svg3" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M14.9536 14.9458L21 21M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -58,17 +116,29 @@
         <button class="resources__button-spec" [ngClass]="{'resources__button-spec--active': button0}" (click)="toggleButtonIndex0($event)">По специальностям</button>
         <button class="resources__button-abc" [ngClass]="{'resources__button-spec--active': button1}" (click)="toggleButtonIndex1($event)">По алфавиту</button>
     </div>
-    <div class="resources__list">
-      <ul class="resource__ul" *ngFor="let resource of resources; let i = index">
-        <li class="resource__item">
-           <input id="resource" type="checkbox" class="resource__check" (click)="checkboxClick(resource, i)">
-           <label for="resource" class="checkbox__text">
-             {{resource.resourceName}}
-             <p class="resource__spec">
-              ({{resource.resourceSpec}})
+    <div class="resources__list" #resourcesList>
+        <form #form="ngForm">
+          <li class="resource__item" *ngFor="let resource of resourcesNameList; let i = index">
+           <input id="resource" type="checkbox" class="resource__check" [ngClass]="{'resource__check--shift': makeShift(resource)}"
+            (click)="checkboxClick(resource)" name="inputCheck" [checked]="resource.checked">
+           <label for="resource" class="checkbox__text" [ngClass]="{'checkbox__text--bold': makeTextBold(resource)}">
+             {{resource.specName}}
+             <p class="resource__spec" [ngClass]="{'resource__spec--close': button0}" >
+              ({{resource.spec}})
              </p>
            </label>
-        </li>
-      </ul>
+          </li>  
+        </form>
     </div>
 </section>
+<ng-template #customListTemplate let-matches="matches" let-query="query" let-typeaheadTemplateMethods>
+    <ul class="resource__input-list">
+      <li class="resource__input-item"
+          *ngFor="let match of matches"
+          [class.active]="typeaheadTemplateMethods.isActive(match)"
+          (click)="typeaheadTemplateMethods.selectMatch(match, $event)"
+          (mouseenter)="typeaheadTemplateMethods.selectActive(match)">
+        {{ match.item }}
+      </li>
+    </ul>
+  </ng-template>

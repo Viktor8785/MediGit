@@ -1,5 +1,5 @@
 .content {
-
+    position: relative;
 }
 
 .content__quote {
@@ -43,6 +43,7 @@
 }
 
 .content__quote-ap {
+    position: relative;
     display: flex;
     height: 30px;
     padding-left: 10px;
@@ -50,7 +51,43 @@
     justify-content: left;
     background-color: #ffffff;
     color: #000000; 
-    border-bottom: 1px dotted #000000;    
+    border-bottom: 1px dotted #000000;
+    &--noapp:hover {
+        background-color: #d2ebf5;
+        &::before {
+            position: absolute;
+            text-align: center;
+            top: -50px;
+            width: 90px;
+            padding: 2px;
+            padding-left: 5px;
+            padding-right: 5px;
+            background-color: #000000;
+            color: #ffffff;
+            font-size: 12px;
+            line-height: 90%;
+            border-radius: 5px;
+            content: 'Запись на прошедший временной интервал недоступна';
+        }     
+    }
+    &--isapp:hover {
+        background-color: #d2ebf5;
+        &::before {
+            position: absolute;
+            top: -30px;
+            width: 90px;
+            padding: 2px;
+            padding-left: 5px;
+            padding-right: 5px;
+            text-align: center;
+            background-color: #000000;
+            color: #ffffff;
+            font-size: 12px;
+            line-height: 90%;
+            border-radius: 5px;
+            content: 'Время доступно для записи';
+         }     
+     }
 }
 
 .content__quote-ispatient {
@@ -61,6 +98,333 @@
     justify-content: left;
     background-color: red;
     color: #000000; 
-    border-bottom: 1px dotted #000000;    
+    border-bottom: 1px dotted #000000; 
+    cursor: default;   
 }
 
+.content__quote-ispatient-quote {
+    display: flex;
+    height: 30px;
+    padding-left: 10px;
+    align-items: center;
+    justify-content: left;
+    background-color: orange;
+    color: #000000; 
+    border-bottom: 1px dotted #000000; 
+    cursor: default;   
+}
+
+.content__modal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+}
+
+.content__modal-wrapper {
+    position: absolute;
+    top: 40%;
+    left: 40%;
+    display: grid;
+    background-color: #ffffff;
+    min-width: 300px;
+    justify-content: center;
+    box-shadow: 0 0 2px 2px #777676;
+    z-index: 2;
+}
+
+.content__modal-header {
+    display: grid;
+    padding-top: 20px;
+    align-items: center;
+}
+
+.content__modal-header-app {
+    display: flex;
+    padding-top: 20px;
+    align-items: center;
+}
+
+.content__modal-header-title {
+    text-align: center;
+}
+
+.content__modal-header-wrapper {
+    display: grid;
+    grid-template-columns: min-content 1fr min-content;
+    &--chacked {
+        background-color: #e2dfdf;  
+    }
+}
+
+.content__modal-header-input {
+    justify-self: end;
+}
+
+.content__modal-text-wrapper {
+    display: grid;
+    margin-left: 10px;
+}
+
+.content__modal-lable {
+    margin: 0;
+    padding: 0;
+    margin-left: 10px;
+}
+
+.content__modal-int {
+    margin: 0;
+    padding: 0;
+}
+
+.content__modal-title {
+    margin: 0;
+    padding: 0;
+}
+
+.content__modal-body {
+    padding-top: 40px;
+    padding-bottom: 20px;
+}
+
+.content__modal-view-text,
+.content__modal-create-text,
+.content__modal-delete-text {
+    margin: 0;
+    padding: 0;
+    margin-left: 10px;
+}
+
+.content__modal-view {
+    display: flex;
+    padding: 5px;
+    padding-left: 0;
+    text-align: center;
+    border-bottom: 2px solid #929090;
+    align-items: center;
+    cursor: pointer;
+    &--disabled {
+        filter: opacity(0.5);
+        cursor: default;
+    }
+    &--disabled:hover .content__modal-view-text {
+        background-color: #ffffff;
+    }
+}
+
+.content__modal-view-svg {
+    transform: scale(0.8);
+}
+
+.content__modal-create {
+    display: flex;
+    padding: 7px;
+    text-align: center;
+    border-bottom: 2px solid #929090;
+    align-items: center;
+    color: blue;
+    cursor: pointer;
+    &--disabled {
+        color: black;
+        filter: opacity(0.5);
+        cursor: default;
+    }
+    &--disabled:hover .content__modal-create-text {
+        background-color: #ffffff;
+    }
+}
+
+.content__modal-delete {
+    display: flex;
+    padding: 7px;
+    text-align: center;
+    align-items: center;
+    color: red;
+    cursor: pointer;
+    &--disabled {
+        color: black;
+        filter: opacity(0.5);
+        cursor: default;
+    }
+    &--disabled:hover .content__modal-delete-text {
+        background-color: #ffffff;
+    }
+}
+
+.content__modal-yes {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+}
+
+.content__modal-yes-content {
+    position: absolute;
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    align-items: center;
+    justify-items: center;
+    text-align: center;
+    top: 40%;
+    left: 40%;
+    width: 300px;
+    height: 200px;
+    background-color: rgb(151, 236, 151);
+    border-radius: 5px;
+    border: 2px solid green;
+    z-index: 4;
+}
+
+.content__modal-yes-message {
+    width: 100%;
+    background-color: green;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.content__modal-yes-svg {
+
+}
+
+.content__modal-info {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+}
+
+.content__modal-info-content {
+    position: absolute;
+    text-align: left;
+    top: 40%;
+    left: 40%;
+    width: 300px;
+    height: 250px;
+    background-color: #ffffff;
+    box-shadow: 0 0 2px 2px #777676;
+    z-index: 4;
+}
+
+.content__modal-info-name {
+    display: grid;
+    padding: 20px;
+    grid-template-columns: min-content 1fr;
+}
+
+.content__modal-info-item {
+    display: grid;
+    padding-left: 20px;
+    grid-template-columns: 0.6fr 1fr;
+}
+
+.content__modal-view-text {
+    margin: 0;
+    padding: 5px;
+    &:hover {
+        background-color: #f0eeee;
+    }
+}
+
+.content__modal-view-text2 {
+    margin: 0;
+    padding: 5px;
+}
+
+.content__modal-create-text {
+    &:hover {
+        background-color: #f0eeee;
+    }
+}
+
+.content__modal-delete-text {
+    &:hover {
+        background-color: #f0eeee;
+    }
+}
+
+.content__modal-view-text1 {
+    margin: 0;
+    padding: 5px;
+    font-weight: 600;
+}
+
+.modal__delete {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+}
+
+.modal__delete-content {
+    position: absolute;
+    text-align: left;
+    top: 40%;
+    left: 40%;
+    width: 300px;
+    height: 270px;
+    background-color: #ffffff;
+    box-shadow: 0 0 2px 2px #777676;
+    z-index: 4;
+}
+
+.modal__delete-header {
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    margin-left: 20px;
+    margin-top: 10px;
+    align-items: center;
+}
+
+.modal__delete-title {
+    margin-left: 20px;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.modal__delete-body {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+}
+
+.modal__delete-subtitle {
+    margin-top: 20px;
+}
+
+.modal__delete-button {
+    display: block;
+    width: 150px;
+    height: 40px;
+    margin-top: 20px;
+    background-color: red;
+    color: #ffffff;
+    border-radius: 10px;
+    border: 1px solid red;
+    &:hover {
+        background-color: rgb(241, 135, 135);
+     }
+     &:active {
+        background-color: rgb(133, 3, 3);
+     }
+}
+
+.modal__delete-href {
+    margin-top: 20px;
+    text-decoration: underline;
+    cursor: pointer;
+    color: blue;
+    &:hover {
+        color: #000000;
+    }
+    &:active {
+        color: #000000;
+    }
+}

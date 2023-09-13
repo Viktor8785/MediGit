@@ -5,6 +5,11 @@ import { ResourcesComponent } from './resources/resources.component';
 import { ShedulerComponent } from './sheduler/sheduler.component';
 import { ShrinkDatePipe } from './sheduler/shrink-date.pipe';
 import { ContentComponent } from './content/content.component';
+import { FormsModule } from '@angular/forms';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   declarations: [
@@ -15,7 +20,12 @@ import { ContentComponent } from './content/content.component';
     ContentComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule,
+    BsDropdownModule,
+    TypeaheadModule,
+    BsDatepickerModule,
+    TooltipModule,
   ],
   exports: [
     ShedulerMainComponent,

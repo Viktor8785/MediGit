@@ -49,8 +49,16 @@
     overflow-y: auto;
 }
 
+.sheduler__body-title {
+    position: absolute;
+    top: 50%;
+    left: 30%;
+}
+
 .sheduler__resource {
     min-width: 180px;
+    width: 180px;
+    max-width: 180px;
     margin-left: 10px;
 }
 
@@ -58,7 +66,7 @@
     position: sticky;
     top: 0;
     min-width: 180px;
-    z-index: 1;
+    z-index: 2;
 }
 
 .sheduler__resource-date {

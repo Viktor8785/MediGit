@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RepositoryDataService } from '../../repository.data.service';
+import { RepositoryDataService } from '../service/repository.data.service';
 import { UserModel } from '../model/user.model';
 import { CommonService } from '../shared/common.service';
 

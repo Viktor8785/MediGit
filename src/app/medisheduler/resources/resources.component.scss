@@ -23,9 +23,40 @@
     display: flex;
     width: 50px;
     height: 30px;
-    margin-right: 25px;
+    margin-right: 20px;
     border-radius: 4px;
     background-color: green;
+    &--disabled {
+        opacity: 0.5;
+    }
+}
+
+.resources__patient-dropdown-menu {
+    list-style: none;
+    margin-left: 7px;
+    padding: 0;
+    background-color: #ffffff;
+}
+
+.resource__patient-desk {
+    position: absolute;
+    display: none;
+    top: 80px;
+    width: 300px;
+    background-color: lightgray;
+    &--active {
+        display: block;
+    }
+}
+
+.resource__patient-name,
+.resource__patient-birthdate,
+.resource__patient-oms {
+    margin: 0;
+    padding: 0;
+    padding-left: 20px;
+    font-weight: 600;
+    color: #1c506e;
 }
 
 .resources__svg {
@@ -41,14 +72,52 @@
 .resources__input-wrapper {
     display: flex;
     margin-left: 10px;
-    margin-top: 15px;
+    margin-top: 30px;
 }
 
 .resources__input {
     width: 255px;
     height: 30px;
+    padding-left: 10px;
+    font-size: 15px;
     border-radius: 6px 0 0 6px;
-    border: 1px solid gray;
+    border-bottom: 1px solid gray;
+    border-top: 1px solid gray;
+    border-left: 1px solid gray;
+    border-right: none;
+}
+
+.resources__input-resource {
+    width: 228px;
+    height: 30px;
+    padding-left: 10px;
+    font-size: 15px;
+    border-radius: 6px 0 0 6px;
+    border-bottom: 1px solid gray;
+    border-top: 1px solid gray;
+    border-left: 1px solid gray;
+    border-right: none;
+    outline: none;
+}
+
+.resource__input-list {
+    width: 255px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    background-color: #ffffff;  
+}
+
+.resource__input-item {
+    padding: 5px;
+    padding-left: 10px;
+    font-size: 15px;
+    cursor: default;
+    white-space: pre-line;
+    &:hover {
+        background-color: rgb(221, 218, 218);
+    }
 }
 
 .resources__patient-search {
@@ -63,7 +132,7 @@
 }
 
 .resources__delimeter {
-    margin-top: 15px;
+    margin-top: 30px;
     margin-left: -10px;
     height: 1px;
     background-color: gray;
@@ -78,9 +147,14 @@
     font-size: 20px;  
 }
 
+.resource__calendar-wrapper {
+    position: relative;
+}
+
 .resources__input-date {
     width: 234px;
     height: 30px;
+    padding-left: 10px;
     border-radius: 6px 0 0 6px;
     border: 1px solid gray;
 }
@@ -91,6 +165,63 @@
     height: 30px;
     border-radius: 0 6px 6px 0;
     border: 1px solid gray; 
+    &--disabled {
+        opacity: 0.5;
+    }
+}
+
+.resource__input-buttons {
+    position: absolute;
+    display: flex;
+    width: 308px;
+    height: 40px;
+    align-content: center;
+    justify-content: center;
+    background-color: #ffffff;
+    z-index: 1081;
+    top: 313px;
+    left: 0;
+    border-bottom: 1px solid #a09f9f;
+}
+
+.resource__input-buttons-wrapper {
+    display: flex;
+   
+}
+
+.resource__input-button-cancel {
+    width: 100px;
+    height: 30px;
+    margin-right: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    border-radius: 4px;
+    border: 1px solid #000000;
+    background-color: gray;
+    background-image: linear-gradient(#ffffff, gray);
+    &:active {
+        background-image: none;
+        background-color: rgb(165, 164, 164);
+        outline: inset 1px; 
+    }
+}
+
+.resource__input-button-ok {
+    width: 100px;
+    height: 30px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffffff;
+    border-radius: 4px;
+    border: 1px solid #000000;
+    background-color: green;
+    background-image: linear-gradient(#ffffff, green);
+    &:active {
+        background-image: none;
+        background-color: green;
+        outline: inset 1px; 
+    }
+    
 }
 
 .resources__svg4 {
@@ -103,7 +234,10 @@
 }
 
 .resources__spec {
-    display: flex;
+    display: grid;
+    width: 275px;
+    margin-left: 10px;
+    grid-template-columns: 30px 158px 1fr 40px;
     height: 40px;
     padding-top: 20px;
     align-items: center;
@@ -123,11 +257,12 @@
     margin: 0;
     margin-left: 5px;
     margin-right: 5px;
+    justify-self: center;
     font-size: 14px;
 }
 
 .resources__svg7 {
-    transform: scale(0.8); 
+    transform: scale(1.1); 
 }
 
 .resources__button-wrapper {
@@ -146,41 +281,111 @@
     background-image: linear-gradient(#ffffff, gray);
     &--active {
         background-image: none;
+        background-color: rgb(165, 164, 164);
         outline: inset 1px; 
     }
 }
 
 .resources__list {
     width: calc(100% - 36px);
-    height: 50vh;
+    height: 40vh;
+    //height: 150px;
     margin-left: 10px;
     margin-top: 50px;
     background-color: #ffffff;
     overflow-y: scroll;
 }
 
-.resource__ul {
-    list-style: none;
-    margin: 5px;
-    padding: 5px;
+.resource__item {
+    display: flex;
+    height: 40px;
+    margin-left: 10px;
+    align-content: center;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #f5f3f3;
 }
 
 .resource__check {
+    display: block;
     margin-right: 10px;
+    margin-left: 10px;
+    &--shift {
+        margin-left: 0;  
+    }
 }
 
 .checkbox__text {
+    display: block;
     margin: 0;
-    padding-top: 5px;
     padding: 0;
     color: #000000;
+    font-size: 15px;
     font-weight: 400;
-    line-height: 90%;
-    word-wrap: break-word;
+    line-height: 100%;
+    white-space: pre-line;
+    &--bold {
+        font-weight: 600; 
+    }
 }
 
 .resource__spec {
     margin: 0;
     padding: 0;
+    font-size: 13px;
     text-transform: lowercase;
+    &--close {
+        display: none;
+    }
+}
+
+.resources__dropdown-menu {
+    list-style: none;
+    margin-left: 48px;
+    padding: 0;
+    background-color: #ffffff;
+}
+
+.resources__dropdown-item {
+    display: flex;
+    padding: 5px; 
+    padding-left: 15px;
+    padding-right: 25px;
+    cursor: default;
+}
+
+.resource__svg-wrapper {
+    height: 30px;
+    border-bottom: 1px solid gray;
+    border-top: 1px solid gray;
+    border-right: 1px solid gray;
+    background-color: #ffffff; 
+}
+
+.resources__svg8 {
+    transform: scale(0.8);
+    background-color: #ffffff;
+    &:hover {
+        filter: brightness(200%);
+    }
+}
+
+.resources__item-text {
+    margin: 0;
+    padding: 0;
+    margin-left: 5px;
+    white-space: pre-line;
+    color: #000000;
+}
+
+.resource__date-custom {
+    background-color: #1c506e !important;
+    border: 1px solid black !important;
+}
+
+.inline-datepicker {
+    position: absolute;
+    display: none;
+    &--active {
+        display: block;
+    }
 }

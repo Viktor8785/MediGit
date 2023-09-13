@@ -1,5 +1,5 @@
 import { Component, ViewChild, ViewChildren, ElementRef, QueryList } from '@angular/core';
-import { RepositoryDataService } from '../../repository.data.service';
+import { RepositoryDataService } from '../service/repository.data.service';
 import { CommonService } from '../shared/common.service';
 import { Subscription } from 'rxjs';
 
@@ -16,14 +16,36 @@ export class ShedulerComponent {
   public button1 = false;
   public button2 = false;
   private subscr!: Subscription;
+  private headMargin: number[] = [];
+  public titleShow = true;
   @ViewChild('head') shedulerHead!: ElementRef<any>;
   @ViewChildren('head') shedulerHeads!: QueryList<any>;
+  
   
   constructor(private repositoryData: RepositoryDataService, private commonService: CommonService,
      )
       {
+        for(let i = 0; i < 1000; i++) {
+          this.headMargin.push(0);
+        }
         this.subscr = commonService.getFilter().subscribe(filter => {
-          this.resources = repositoryData.getFilteredResources();
+          this.resources = repositoryData.getFilteredResources().sort((a, b) => a.date - b.date);
+          if(this.resources.length) {
+            this.titleShow = false;
+          } else {
+            this.titleShow = true;
+          }
+          setTimeout(() => {
+            let max = 0;
+            this.shedulerHeads.forEach((head) => {
+              if(head.nativeElement.clientHeight > max) {
+                max = head.nativeElement.clientHeight;
+              }
+            });
+            this.shedulerHeads.forEach((head, index) => {
+              this.headMargin[index] = (max - head.nativeElement.clientHeight);
+            });
+          },0);
         });
         commonService.emitFilter('filter');
       }
@@ -39,7 +61,6 @@ export class ShedulerComponent {
       this.button2 = false;
       this.commonService.dayDuration = 1;
       this.repositoryData.filterResources(this.commonService.resources, this.commonService.startDate, this.commonService.dayDuration);
-      //this.resources = this.repositoryData.getFilteredResources();
       this.commonService.emitFilter('filter');
     }
 
@@ -50,7 +71,6 @@ export class ShedulerComponent {
       this.button2 = false;
       this.commonService.dayDuration = 2;
       this.repositoryData.filterResources(this.commonService.resources, this.commonService.startDate, this.commonService.dayDuration);
-      //this.resources = this.repositoryData.getFilteredResources();
       this.commonService.emitFilter('filter');
     }
 
@@ -62,20 +82,14 @@ export class ShedulerComponent {
       this.button2 = true;
       this.commonService.dayDuration = 7;
       this.repositoryData.filterResources(this.commonService.resources, this.commonService.startDate, this.commonService.dayDuration);
-      //this.resources = this.repositoryData.getFilteredResources();
       this.commonService.emitFilter('filter');
     }
     
-    headScrollBack($event: any) {
-      //this.shedulerHeads.forEach((head) => head.nativeElement.style.top = '20px');
+    styleHeadMargin(index: number) {
+      return {'padding-top': this.headMargin[index].toString() + 'px'};
     }
     
     ngAfterViewInit() {
-      this.shedulerHeads.forEach((head) => head.nativeElement.style.top = '0px');
-      this.shedulerHeads.forEach((head) => {
-      let headHeight = head.nativeElement.clientHeight;
-      //console.log(headHeight);
-      });
     }
 
     ngOnDestroy() {

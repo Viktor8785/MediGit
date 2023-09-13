@@ -15,6 +15,7 @@ import { MediShedulerModule } from './medisheduler/medisheduler.module';
     AppRoutingModule,
     BrowserAnimationsModule,
     MediShedulerModule,
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

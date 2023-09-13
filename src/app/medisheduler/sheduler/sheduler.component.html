@@ -7,8 +7,9 @@
             <button class="sheduler__button" [ngClass]="{'sheduler__button--active': button2}" (click)="toggleButtonIndex2($event)">Неделя</button>
         </div>
     </div>
-    <div class="sheduler__body" (scroll)="headScrollBack($event)">
-        <div class="sheduler__resource" *ngFor="let resource of resources">
+    <div id="sheduler-body"  class="sheduler__body">
+        <p class="sheduler__body-title" *ngIf="titleShow">Для просмотра расписания выберите хотя бы один Доступный ресурс</p>
+        <div class="sheduler__resource" *ngFor="let resource of resources; let i = index">
             <div class="sheduler__wrapper" #head>
                 <div class="sheduler__resource-date">{{resource.date | shrinkDate}}</div>
                 <div class="sheduler__resource-name">{{resource.resourceName}}</div>
@@ -16,7 +17,9 @@
                 <div class="sheduler__resource-hosp">{{resource.resourceHospital}}</div>
                 <div class="sheduler__resource-work">{{getWorkHours(resource)}}</div>  
             </div>
-            <app-content [resource] = "resource"></app-content>
+            <div class="sheduler__body-res" [ngStyle]="styleHeadMargin(i)">
+                <app-content [resource] = "resource" [index]="i" [resources]="resources"></app-content>
+            </div>
         </div>
     </div>
 </section>
