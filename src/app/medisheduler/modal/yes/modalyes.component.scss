@@ -1,0 +1,36 @@
+.content__modal-yes {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+}
+
+.content__modal-yes-content {
+    position: absolute;
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    align-items: center;
+    justify-items: center;
+    text-align: center;
+    top: 40%;
+    left: 40%;
+    width: 300px;
+    height: 200px;
+    background-color: rgb(151, 236, 151);
+    border-radius: 5px;
+    border: 2px solid green;
+    z-index: 4;
+}
+
+.content__modal-yes-message {
+    width: 100%;
+    background-color: green;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.content__modal-yes-svg {
+
+}

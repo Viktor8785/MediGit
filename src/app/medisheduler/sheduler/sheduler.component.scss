@@ -30,9 +30,15 @@
     border-radius: 4px;
     background-color: green;
     background-image: linear-gradient(#ffffff, green);
+    &:hover {
+        filter: brightness(1.2);
+    }
     &--active {
         background-image: none;
         outline: inset 1px; 
+        &:hover {
+            filter: brightness(1);
+        }
     }
 }
 
@@ -106,7 +112,7 @@
     align-items: center;
     justify-content: center;
     background-color: #6d9db3;
-    color: #ffffff;
+    color: #000000;
 }
 
 .sheduler__resource-work {
@@ -115,5 +121,20 @@
     align-items: center;
     justify-content: center;
     background-color: #6db376;
+    color: #000000;
+}
+
+.sheduler__resource-full {
+    position: absolute;
+    display: grid;
+    justify-content: center;
+    min-width: 180px;
+    z-index: 2;
+    background-color: #6db376;
     color: #ffffff;
+}
+
+.sheduler__resource-item {
+    color: #000000;
+    text-align: center;
 }

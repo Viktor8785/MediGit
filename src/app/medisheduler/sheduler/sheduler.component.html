@@ -15,7 +15,10 @@
                 <div class="sheduler__resource-name">{{resource.resourceName}}</div>
                 <div class="sheduler__resource-spec">{{resource.resourceSpec}}</div>
                 <div class="sheduler__resource-hosp">{{resource.resourceHospital}}</div>
-                <div class="sheduler__resource-work">{{getWorkHours(resource)}}</div>  
+                <div class="sheduler__resource-work" (click)="setHeadFull(i)">{{getWorkHours(resource)}}</div>
+                <div class="sheduler__resource-full" *ngIf="headFull[i]" (click)="setHeadCompact(i)">
+                    <p class="sheduler__resource-item" *ngFor="let record of headRecords[i]">{{record}}</p>
+                </div>  
             </div>
             <div class="sheduler__body-res" [ngStyle]="styleHeadMargin(i)">
                 <app-content [resource] = "resource" [index]="i" [resources]="resources"></app-content>

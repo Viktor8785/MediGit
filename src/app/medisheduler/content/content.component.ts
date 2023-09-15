@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { UserModel } from '../model/user.model';
 import { AppointmentModel } from '../model/appointment.model';
 import { ResourceModel } from '../model/resource.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-content',
@@ -47,7 +48,6 @@ export class ContentComponent {
   public modalYesShow = false;
   public modalInfoShow = false;
   public modalDeleteShow = false;
-  private timerModalYes!: any;
   public patientName = '';
   public patientsData: UserModel[] = [];
   public patientsName: string[] = [];
@@ -61,121 +61,15 @@ export class ContentComponent {
   private modalCreateAllowed = false;
   public confirmDelete = false;
   private patientDataSelected!: UserModel;
-  private resourceDataSelected!: ResourceModel;
+  private resourceDataSelected!: any;
   private patientInQuote: boolean = false;
+  
 
   constructor(private viewContainerRef: ViewContainerRef, private repositoryData: RepositoryDataService, 
-    private commonService: CommonService, private changeDetector: ChangeDetectorRef) {
+    private commonService: CommonService, private changeDetector: ChangeDetectorRef, private route: Router,) {
+      this.commonService.resource = this.resource;
   }
 
-  deleteAppointment() {
-    let patient = this.patientDataSelected;
-    let resource = this.resourceDataSelected;
-    let userId = this.patientDataSelected.userId;
-    let specId = this.resourceDataSelected.resourceId;
-    let int = this.intervalDate;
-    let patientAppId = 0;
-    let resourceAppId = 0;
-    patient.userAppointment.forEach((app) => {
-      if(app.appDate.getTime() == int.getTime() && app.specId == specId) {
-        patientAppId = app.appId;
-      }
-    });
-    resource.resourceAppointment.forEach((app) => {
-      if(app.appDate.getTime() == int.getTime() && app.userId == userId) {
-        resourceAppId = app.appId;
-      }
-    });
-    this.repositoryData.deleteResourceAppointment(specId, resourceAppId);
-    this.repositoryData.deleteUserAppointment(userId, patientAppId);
-    this.repositoryData.filterResources(this.commonService.resources, this.commonService.startDate, this.commonService.dayDuration);
-    this.commonService.emitFilter('filter');
-  }
-  
-  makeAppointment(patient: UserModel, int: Date) {
-    let userId = patient.userId;
-    let specId = this.resource.resourceId;
-    let maxId = 0;
-    let newAppoinment!: AppointmentModel;
-    patient.userAppointment.forEach((app: AppointmentModel) => {
-      if(app.appId > maxId) {
-        maxId = app.appId;
-      }
-    });
-    maxId++;
-    newAppoinment = new AppointmentModel(maxId, specId, userId, int);
-    this.repositoryData.addUserAppointment(userId, newAppoinment);
-    maxId = 0;
-    this.resource.resourceAppointment.forEach((app: AppointmentModel) => {
-      if(app.appId > maxId) {
-        maxId = app.appId;
-      }
-    });
-    maxId++;
-    newAppoinment = new AppointmentModel(maxId, specId, userId, int);
-    this.repositoryData.addResourceAppointment(specId,newAppoinment);
-    this.modalAppShow = false;
-    
-    this.modalYesShow = true;
-    this.timerModalYes = setTimeout(() => {
-      this.modalYesShow = false;
-      this.repositoryData.filterResources(this.commonService.resources, this.commonService.startDate, this.commonService.dayDuration);
-      this.commonService.emitFilter('filter');
-    }, 3000);
-  }
-  
-  onModalYesClick(event: any) {
-    this.modalYesShow = false;
-    clearTimeout(this.timerModalYes);
-    this.repositoryData.filterResources(this.commonService.resources, this.commonService.startDate, this.commonService.dayDuration);
-    this.commonService.emitFilter('filter');
-    this.changeDetector.detectChanges();
-  }
-  
-  onModalInfoClick() {
-    this.modalInfoShow = false;
-  }
-
-  onModalAppClick(event: any) {
-    const div = document.querySelector('#modal-app');
-    if(this.modalAppShow) {
-      if(!event.composedPath().includes(div)) {
-        this.modalAppShow = false;
-      } 
-    }
-  }
-  
-  clickModalView(event: any) {
-    if(this.modalView) {
-      this.modalAppShow = false;
-      this.modalInfoShow = true;
-    }
-  }
-
-  clickModalCreate(event: any) {
-    if(this.modalCreate) {
-      let patient = this.commonService.patientSelectedData;
-      let int = this.intervalDate;
-      this.makeAppointment(patient, int);
-    }
-  }
-
-  onModalDeleteHrefClick() {
-    this.modalDeleteShow = false;
-  }
-  
-  onModalDeleteButtonfClick() {
-    this.modalDeleteShow = false;
-    this.deleteAppointment();
-  }
-  
-  clickModalDelete(event: any) {
-    if(this.modalDelete) {
-      this.modalAppShow = false;
-      this.modalDeleteShow = true;
-    }
-  }
-  
   makeShedule() {
     const workStart = 8;
     const workEnd = 21;
@@ -469,11 +363,7 @@ export class ContentComponent {
   onMouseOverApp(event: any) {
     this.toolTipContent(event);
   }
-  
-  onClickModal(event: any) {
-    //console.log(event.target);
-  }
-  
+    
   isPatientAppointmentAlowed() {
     let patient = this.commonService.patientSelectedData;
     let intStart = this.intervalDate;
@@ -500,15 +390,22 @@ export class ContentComponent {
   }
   
   onClickAppointment(event: any) {
-    this.modalAppShow = true;
+    this.commonService.resource = this.resource;
     this.modalView = false;
+    this.commonService.modalView = false;
     this.modalDelete = false;
+    this.commonService.modalDelete = false;
     this.intervalDate = new Date(this.getIntDate(event));
     this.intervalDate.setSeconds(0);
     this.intervalDate.setMilliseconds(0);
+    this.commonService.intervalDate = new Date(this.intervalDate);
     this.modalCreate = this.isCreateIntervalAllowed(event) && !this.commonService.patientDisabled && this.isPatientAppointmentAlowed();
+    this.commonService.modalCreate = this.modalCreate;
     this.appExist = false;
+    this.commonService.appExist = false;
     this.intTime = event.target.childNodes[0].textContent + ' - ' + this.makeInterval(event.target.childNodes[0].textContent);
+    this.commonService.intTime = this.intTime;
+    this.route.navigateByUrl('sheduler/modalapp');
   }
 
   makeInterval(int: string): string {
@@ -533,49 +430,62 @@ export class ContentComponent {
     return hoursString + ':' + minutesString;
   }
   
-  onClickPatientName(i: number) {
-    this.modalView = true;
-    this.modalDelete = this.modalDeleteAllowed;
-    this.patientNameSelected = this.patientsName[i];
-    this.patientOmsSelected = this.patientsData[i].userOMS;
-    this.patientDataSelected = this.patientsData[i];
-  }
+
   
   onClickPatient(event: any, createAllowed: boolean) {
+    this.commonService.resource = this.resource;
     this.intervalDate = new Date(this.getIntDate(event));
     this.intervalDate.setSeconds(0);
     this.intervalDate.setMilliseconds(0);
+    this.commonService.intervalDate = new Date(this.intervalDate);
     this.resourceDataSelected = this.resource;
     let patients = this.checkNumberOfPatients();
     this.patientsName = [];
+    this.commonService.patientsName = [];
     this.patientsData = [];
     patients.forEach((patient) => {
       let user = this.repositoryData.getUser(patient);
       this.patientsData.push(user);
+      this.commonService.patientsData.push(user);
       this.patientsName.push(this.findPatient(patient));
+      this.commonService.patientsName.push(this.findPatient(patient));
     });
     this.patientSingle = true;
+    this.commonService.patientSingle = true;
     this.patientDataSelected = this.patientsData[0];
+    this.commonService.patientDataSelected = this.patientDataSelected;
     this.patientNameSelected = this.patientsName[0];
+    this.commonService.patientNameSelected = this.patientNameSelected;
     this.patientOmsSelected = this.patientsData[0].userOMS;
+    this.commonService.patientOmsSelected = this.patientOmsSelected;
     this.dateSelected = this.formatDateToString(this.resource.date);
+    this.commonService.dateSelected = this.dateSelected;
     this.modalView = true;
+    this.commonService.modalView = this.modalView;
     this.modalDeleteAllowed = this.isCreateIntervalAllowed(event);
+    this.commonService.modalDeleteAllowed = this.modalDeleteAllowed;
     if(createAllowed) {
       this.modalCreateAllowed = this.isCreateIntervalAllowed(event) && !this.commonService.patientDisabled && this.isPatientAppointmentAlowed();
     } else {
       this.modalCreateAllowed = false;
     }
     this.modalDelete = this.modalDeleteAllowed;
+    this.commonService.modalDelete = this.modalDelete;
     this.modalCreate = this.modalCreateAllowed;
+    this.commonService.modalCreate = this.modalCreate;
     if(this.patientsName.length > 1) {
       this.patientSingle = false;
+      this.commonService.patientSingle = false;
       this.modalView = false;
+      this.commonService.modalView = false;
       this.modalDelete = false;
+      this.commonService.modalDelete = this.modalDelete;
       this.modalCreate = false;
+      this.commonService.modalCreate = this.modalCreate;
     }
-    this.modalAppShow = true;
     this.appExist = true;
+    this.commonService.appExist = true;
+    this.route.navigateByUrl('sheduler/modalapp');
   }
 
   formatDateToString(date: Date): string {

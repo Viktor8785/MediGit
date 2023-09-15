@@ -1,0 +1,49 @@
+<div class="content__modal"  (click)="onModalAppClick($event)">
+    <div  id="modal-app" class="content__modal-wrapper">
+        <div class="content__modal-header" *ngIf="appExist">
+            <p class="content__modal-header-title" *ngIf="!patientSingle">Выберите одного из пациентов:</p>
+            <div class="content__modal-header-wrapper" *ngFor="let patientName of patientsName; let i = index" (click)="onClickPatientName(i)">
+                <svg fill="#000000" width="24px" height="24px" viewBox="-1 0 19 19" xmlns="http://www.w3.org/2000/svg" class="cf-icon-svg"><path d="M16.417 9.583A7.917 7.917 0 1 1 8.5 1.666a7.917 7.917 0 0 1 7.917 7.917zm-6.24-.064H6.81a2.528 2.528 0 0 0-2.692 2.303v1.51a.794.794 0 0 0 .792.792h7.166a.794.794 0 0 0 .792-.791V11.82a2.528 2.528 0 0 0-2.692-2.302zM6.14 6.374a2.353 2.353 0 1 0 2.353-2.353A2.353 2.353 0 0 0 6.14 6.374z"/></svg>
+                <label [for]="patientId[i]" class="content__modal-lable">{{patientName}}</label>
+                <input [id]="patientId[i]" type="radio" name="name" class="content__modal-header-input" [checked]="patientChecked" *ngIf="!patientSingle">
+            </div>
+        </div>
+        <div class="content__modal-header-app" *ngIf="!appExist">
+            <svg class="content__modal-svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 7V12L14.5 13.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="content__modal-text-wrapper">
+               <p class="content__modal-title">Выбран интервал времени</p>
+                <p class="content__modal-int">{{intTime}}</p> 
+            </div>
+        </div>
+        <div class="content__modal-body">
+            <div class="content__modal-view" [ngClass]="{'content__modal-view--disabled': !modalView}" (click)="clickModalView($event)">
+                <svg class="content__modal-view-svg" width="32px" height="32px" viewBox="-3.5 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <g id="icomoon-ignore">
+                    </g>
+                    <path d="M6.294 14.164h12.588v1.049h-12.588v-1.049z" fill="#000000"></path>
+                    <path d="M6.294 18.36h12.588v1.049h-12.588v-1.049z" fill="#000000"></path>
+                    <path d="M6.294 22.557h8.392v1.049h-8.392v-1.049z" fill="#000000"></path>
+                    <path d="M15.688 3.674c-0.25-1.488-1.541-2.623-3.1-2.623s-2.85 1.135-3.1 2.623h-9.489v27.275h25.176v-27.275h-9.488zM10.49 6.082v-1.884c0-1.157 0.941-2.098 2.098-2.098s2.098 0.941 2.098 2.098v1.884l0.531 0.302c1.030 0.586 1.82 1.477 2.273 2.535h-9.803c0.453-1.058 1.243-1.949 2.273-2.535l0.53-0.302zM24.128 29.9h-23.078v-25.177h8.392v0.749c-1.638 0.932-2.824 2.566-3.147 4.496h12.588c-0.322-1.93-1.509-3.563-3.147-4.496v-0.749h8.392v25.177z" fill="#000000">
+                    </path>
+                </svg>
+                <p class="content__modal-view-text">Просмотреть запись</p>
+            </div>
+            <div class="content__modal-create" [ngClass]="{'content__modal-create--disabled': !modalCreate}" (click)="clickModalCreate($event)">
+                <svg class="content__modal-create-svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.4001 18.1612L11.4001 18.1612L18.796 10.7653C17.7894 10.3464 16.5972 9.6582 15.4697 8.53068C14.342 7.40298 13.6537 6.21058 13.2348 5.2039L5.83882 12.5999L5.83879 12.5999C5.26166 13.1771 4.97307 13.4657 4.7249 13.7838C4.43213 14.1592 4.18114 14.5653 3.97634 14.995C3.80273 15.3593 3.67368 15.7465 3.41556 16.5208L2.05445 20.6042C1.92743 20.9852 2.0266 21.4053 2.31063 21.6894C2.59466 21.9734 3.01478 22.0726 3.39584 21.9456L7.47918 20.5844C8.25351 20.3263 8.6407 20.1973 9.00498 20.0237C9.43469 19.8189 9.84082 19.5679 10.2162 19.2751C10.5343 19.0269 10.823 18.7383 11.4001 18.1612Z" fill="#000000"/>
+                    <path d="M20.8482 8.71306C22.3839 7.17735 22.3839 4.68748 20.8482 3.15178C19.3125 1.61607 16.8226 1.61607 15.2869 3.15178L14.3999 4.03882C14.4121 4.0755 14.4246 4.11268 14.4377 4.15035C14.7628 5.0875 15.3763 6.31601 16.5303 7.47002C17.6843 8.62403 18.9128 9.23749 19.85 9.56262C19.8875 9.57563 19.9245 9.58817 19.961 9.60026L20.8482 8.71306Z" fill="#000000"/>
+                </svg>
+                <p class="content__modal-create-text">Создать Запись</p>
+            </div>
+            <div class="content__modal-delete" [ngClass]="{'content__modal-delete--disabled': !modalDelete}" (click)="clickModalDelete($event)">
+                <svg class="content__modal-delete-svg" width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M8.53113 1C5.52364 1 3.19671 3.63591 3.56974 6.62017L5.28873 20.3721C5.47639 21.8734 6.7526 23 8.26557 23H15.7344C17.2474 23 18.5236 21.8734 18.7113 20.3721L20.4303 6.62017C20.8033 3.63591 18.4764 1 15.4689 1H8.53113ZM5.70148 5C6.11066 3.8455 7.21175 3 8.53113 3H15.4689C16.7883 3 17.8893 3.8455 18.2985 5H5.70148ZM5.63279 7L7.27329 20.124C7.33584 20.6245 7.76124 21 8.26557 21H15.7344C16.2388 21 16.6642 20.6245 16.7267 20.124L18.3672 7H5.63279Z" fill="#000000"/>
+                    <path d="M15.002 10.998C14.6114 10.6075 13.9783 10.6075 13.5878 10.998L12 12.5858L10.4201 11.0058C10.0296 10.6153 9.3964 10.6153 9.00587 11.0058C8.61535 11.3964 8.61535 12.0295 9.00587 12.4201L10.5858 14L9.00001 15.5858C8.60949 15.9763 8.60949 16.6095 9.00001 17C9.39054 17.3905 10.0237 17.3905 10.4142 17L12 15.4142L13.5878 17.0019C13.9783 17.3925 14.6114 17.3925 15.002 17.0019C15.3925 16.6114 15.3925 15.9782 15.002 15.5877L13.4142 14L15.002 12.4123C15.3925 12.0217 15.3925 11.3886 15.002 10.998Z" fill="#000000"/>
+                </svg>
+                <p class="content__modal-delete-text">Отменить запись</p>
+            </div>
+        </div>
+    </div>
+</div>

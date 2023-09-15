@@ -1,0 +1,51 @@
+.content__modal-info {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+}
+
+.content__modal-info-content {
+    position: absolute;
+    text-align: left;
+    top: 40%;
+    left: 40%;
+    width: 300px;
+    height: 250px;
+    background-color: #ffffff;
+    box-shadow: 0 0 2px 2px #777676;
+    z-index: 4;
+}
+
+.content__modal-info-name {
+    display: grid;
+    padding: 20px;
+    grid-template-columns: min-content 1fr;
+}
+
+.content__modal-info-item {
+    display: grid;
+    padding-left: 20px;
+    grid-template-columns: 0.6fr 1fr;
+}
+
+.content__modal-view-text {
+    margin: 0;
+    padding: 5px;
+    &:hover {
+        background-color: #f0eeee;
+    }
+}
+
+.content__modal-view-text1 {
+    margin: 0;
+    padding: 5px;
+    font-weight: 600;
+}
+
+.content__modal-view-text2 {
+    margin: 0;
+    padding: 5px;
+}

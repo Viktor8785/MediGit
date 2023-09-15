@@ -26,8 +26,14 @@
     margin-right: 20px;
     border-radius: 4px;
     background-color: green;
+    &:hover {
+        filter: brightness(1.2);
+    }
     &--disabled {
         opacity: 0.5;
+        &:hover {
+            filter: brightness(1);
+        }
     }
 }
 
@@ -165,9 +171,6 @@
     height: 30px;
     border-radius: 0 6px 6px 0;
     border: 1px solid gray; 
-    &--disabled {
-        opacity: 0.5;
-    }
 }
 
 .resource__input-buttons {
@@ -204,6 +207,9 @@
         background-color: rgb(165, 164, 164);
         outline: inset 1px; 
     }
+    &:hover {
+        filter: brightness(1.2);
+    }
 }
 
 .resource__input-button-ok {
@@ -221,16 +227,24 @@
         background-color: green;
         outline: inset 1px; 
     }
-    
+    &:hover {
+        filter: brightness(1.2);
+    }
 }
 
 .resources__svg4 {
     transform: scale(0.7);
+    &--disabled {
+        opacity: 0.5;
+    }
 }
 
 .resources__svg5 {
     transform: scale(0.4);
     fill: #000000;
+    &--disabled {
+        opacity: 0.5;
+    }
 }
 
 .resources__spec {
@@ -279,17 +293,22 @@
     border-radius: 4px;
     background-color: gray;
     background-image: linear-gradient(#ffffff, gray);
+    &:hover {
+        filter: brightness(1.2);
+    }
     &--active {
         background-image: none;
         background-color: rgb(165, 164, 164);
-        outline: inset 1px; 
+        outline: inset 1px;
+        &:hover {
+            filter: brightness(1);
+        } 
     }
 }
 
 .resources__list {
     width: calc(100% - 36px);
     height: 40vh;
-    //height: 150px;
     margin-left: 10px;
     margin-top: 50px;
     background-color: #ffffff;

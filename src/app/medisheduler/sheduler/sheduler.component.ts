@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewChildren, ElementRef, QueryList } from '@angular/core';
+import { Component, ViewChild, ViewChildren, ElementRef, QueryList, ChangeDetectorRef } from '@angular/core';
 import { RepositoryDataService } from '../service/repository.data.service';
 import { CommonService } from '../shared/common.service';
 import { Subscription } from 'rxjs';
@@ -18,15 +18,18 @@ export class ShedulerComponent {
   private subscr!: Subscription;
   private headMargin: number[] = [];
   public titleShow = true;
+  public headFull: boolean[] = [];
+  public headRecords: any = [];
   @ViewChild('head') shedulerHead!: ElementRef<any>;
   @ViewChildren('head') shedulerHeads!: QueryList<any>;
   
   
-  constructor(private repositoryData: RepositoryDataService, private commonService: CommonService,
+  constructor(private repositoryData: RepositoryDataService, private commonService: CommonService, private changeDetection: ChangeDetectorRef,
      )
       {
         for(let i = 0; i < 1000; i++) {
           this.headMargin.push(0);
+          this.headFull.push(false);
         }
         this.subscr = commonService.getFilter().subscribe(filter => {
           this.resources = repositoryData.getFilteredResources().sort((a, b) => a.date - b.date);
@@ -36,6 +39,8 @@ export class ShedulerComponent {
             this.titleShow = true;
           }
           setTimeout(() => {
+            this.changeDetection.detectChanges();
+            this.makeHeadRecords(this.resources);
             let max = 0;
             this.shedulerHeads.forEach((head) => {
               if(head.nativeElement.clientHeight > max) {
@@ -45,10 +50,44 @@ export class ShedulerComponent {
             this.shedulerHeads.forEach((head, index) => {
               this.headMargin[index] = (max - head.nativeElement.clientHeight);
             });
+            this.changeDetection.detectChanges();
           },0);
         });
         commonService.emitFilter('filter');
       }
+
+    makeHeadRecords(resources: any) {
+      this.headRecords = [];
+      resources.forEach((resource: any) => {
+        let dayShed: any = [];
+        let day = resource.shedule[resource.date.getDay()];
+          dayShed = [];
+          
+          for(let i = 0; i <= day.doesNotWork.length - 2; i+=2) {
+            dayShed.push('Врач не работает' + ' (' + day.doesNotWork[i] + ' - ' + day.doesNotWork[i + 1] + ')');
+          }
+          for(let i = 0; i <= day.learning.length - 2; i+=2) {
+            dayShed.push('Обучение' + '(' + day.learning[i] + ' - ' + day.learning[i + 1] + ')');
+          }
+          
+          for(let i = 0; i <= day.documents.length - 2; i+=2) {
+            dayShed.push('Работа с документами' + ' (' + day.documents[i] + ' - ' + day.documents[i + 1] + ')');
+          }
+
+          for(let i = 0; i <= day.homeApp.length - 2; i+=2) {
+            dayShed.push('Прием на дому' +  ' (' + day.homeApp[i] + ' - ' + day.homeApp[i + 1] + ')');
+          }
+          this.headRecords.push(dayShed);
+      });
+    }
+    
+    setHeadFull(i: number) {
+      this.headFull[i] = true;
+    }
+    
+    setHeadCompact(i: number) {
+      this.headFull[i] = false;
+    }
 
     getWorkHours(resource: any) {
       return resource.workTimeStart + '-' + resource.workTimeEnd;

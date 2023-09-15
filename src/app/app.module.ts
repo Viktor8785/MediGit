@@ -4,7 +4,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MediShedulerModule } from './medisheduler/medisheduler.module';
-
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -15,6 +15,7 @@ import { MediShedulerModule } from './medisheduler/medisheduler.module';
     AppRoutingModule,
     BrowserAnimationsModule,
     MediShedulerModule,
+    RouterModule
     
   ],
   providers: [],

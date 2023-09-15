@@ -13,13 +13,29 @@ export class CommonService {
   public modalDel: EventEmitter<boolean> = new EventEmitter(true);
   public dayDuration = 1;  
   public resources: string[] = [];
-  public modalShow = false;
-  public modalYesShow = false;
-  public modalDelShow = false;
+  public resource: any;
   public startDate: Date = new Date();
   public resourceToggle = 0;
   public patientDisabled = true;
   public patientSelectedData!: UserModel;
+  public patientNameSelected = '';
+  public patientOmsSelected = '';
+  public dateSelected = '';
+  public appExist = false;
+  public patientSingle = true;
+  public patientsName: string[] = [];
+  public intTime = '';
+  public patientId = [1, 2];
+  public patientChecked!: boolean;
+  public modalView = false;
+  public modalCreate = false;
+  public modalDelete = false;  
+  public modalDeleteAllowed = false;
+  public modalCreateAllowed = false;
+  public patientsData: UserModel[] = [];
+  public intervalDate!: Date;
+  public timerModalYes!: any;
+  public patientDataSelected!: UserModel;
 
   constructor() { }
 
@@ -31,27 +47,4 @@ export class CommonService {
     return this.filter;
   }
   
-  emitModal(value: boolean) {
-    this.modal.emit(value);
-  }
-
-  getModal() {
-    return this.modal;
-  }
- 
-  emitModalYes(value: boolean) {
-    this.modalYes.emit(value);
-  }
-
-  getModalYes() {
-    return this.modalYes;
-  }
-
-  emitModalDel(value: boolean) {
-    this.modalDel.emit(value);
-  }
-
-  getModalDel() {
-    return this.modalDel;
-  }
 }
