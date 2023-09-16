@@ -7,7 +7,7 @@
             <button class="sheduler__button" [ngClass]="{'sheduler__button--active': button2}" (click)="toggleButtonIndex2($event)">Неделя</button>
         </div>
     </div>
-    <div id="sheduler-body"  class="sheduler__body">
+    <div id="sheduler-body"  class="sheduler__body"  #body  (scroll)="onScroll($event)">
         <p class="sheduler__body-title" *ngIf="titleShow">Для просмотра расписания выберите хотя бы один Доступный ресурс</p>
         <div class="sheduler__resource" *ngFor="let resource of resources; let i = index">
             <div class="sheduler__wrapper" #head>
@@ -16,11 +16,11 @@
                 <div class="sheduler__resource-spec">{{resource.resourceSpec}}</div>
                 <div class="sheduler__resource-hosp">{{resource.resourceHospital}}</div>
                 <div class="sheduler__resource-work" (click)="setHeadFull(i)">{{getWorkHours(resource)}}</div>
-                <div class="sheduler__resource-full" *ngIf="headFull[i]" (click)="setHeadCompact(i)">
-                    <p class="sheduler__resource-item" *ngFor="let record of headRecords[i]">{{record}}</p>
+                <div class="sheduler__resource-full" #full *ngIf="headFull[i]" (click)="setHeadCompact(i)">
+                    <p class="sheduler__resource-item" #record *ngFor="let record of headRecords[i]">{{record}}</p>
                 </div>  
             </div>
-            <div class="sheduler__body-res" [ngStyle]="styleHeadMargin(i)">
+            <div class="sheduler__body-res"  [ngStyle]="styleHeadMargin(i)">
                 <app-content [resource] = "resource" [index]="i" [resources]="resources"></app-content>
             </div>
         </div>

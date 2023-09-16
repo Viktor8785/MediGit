@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewChildren, ElementRef, QueryList, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, ViewChildren, ElementRef, QueryList, ChangeDetectorRef, HostListener } from '@angular/core';
 import { RepositoryDataService } from '../service/repository.data.service';
 import { CommonService } from '../shared/common.service';
 import { Subscription } from 'rxjs';
@@ -20,36 +20,68 @@ export class ShedulerComponent {
   public titleShow = true;
   public headFull: boolean[] = [];
   public headRecords: any = [];
-  @ViewChild('head') shedulerHead!: ElementRef<any>;
+  private maxHeaderHeight = 1000;
+  private minHeaderHeight = 0;
+  private headersWithMaxHeight: number[] = [];
   @ViewChildren('head') shedulerHeads!: QueryList<any>;
-  
+  @ViewChildren('full') shedulerFulls!: QueryList<any>;
+  @ViewChild('body') bodyRef!: ElementRef;
   
   constructor(private repositoryData: RepositoryDataService, private commonService: CommonService, private changeDetection: ChangeDetectorRef,
      )
       {
-        for(let i = 0; i < 1000; i++) {
-          this.headMargin.push(0);
-          this.headFull.push(false);
-        }
         this.subscr = commonService.getFilter().subscribe(filter => {
           this.resources = repositoryData.getFilteredResources().sort((a, b) => a.date - b.date);
+          for(let i = 0; i < 1000; i++) {
+            this.headMargin[i] = 0;
+            this.headFull[i] = true;
+          }
           if(this.resources.length) {
             this.titleShow = false;
           } else {
             this.titleShow = true;
           }
+          this.makeHeadRecords(this.resources);
           setTimeout(() => {
             this.changeDetection.detectChanges();
-            this.makeHeadRecords(this.resources);
             let max = 0;
-            this.shedulerHeads.forEach((head) => {
-              if(head.nativeElement.clientHeight > max) {
-                max = head.nativeElement.clientHeight;
+            let headOfMaxFull = 0;
+            this.shedulerFulls.forEach((record, index) => {
+              if(record.nativeElement.clientHeight > max) {
+                max = record.nativeElement.clientHeight;
+                headOfMaxFull = this.shedulerHeads.get(index).nativeElement.clientHeight;
+                this.maxHeaderHeight = max;
               }
             });
-            this.shedulerHeads.forEach((head, index) => {
-              this.headMargin[index] = (max - head.nativeElement.clientHeight);
+            this.headersWithMaxHeight = [];
+            let min = 1000;
+            this.shedulerFulls.forEach((record, index) => {
+              if(record.nativeElement.clientHeight == max) {
+                this.headersWithMaxHeight.push(index);
+              }
+              if(record.nativeElement.clientHeight < min && record.nativeElement.clientHeight > 0) {
+                min = record.nativeElement.clientHeight;
+                this.minHeaderHeight = min;
+              }
             });
+            this.shedulerFulls.forEach((record, index) => {
+              this.headMargin[index] = max;
+            });
+            let max1 = 0;
+            this.shedulerHeads.forEach((head) => {
+              if(head.nativeElement.clientHeight > max1) {
+                max1 = head.nativeElement.clientHeight;
+              }
+            });
+            if(max == 0) {
+              this.shedulerHeads.forEach((head, index) => {
+                this.headMargin[index] = max1 - head.nativeElement.clientHeight;
+              });
+            } else {
+              this.shedulerHeads.forEach((head, index) => {
+                this.headMargin[index] = this.headMargin[index] + (headOfMaxFull - head.nativeElement.clientHeight);
+              });
+            }
             this.changeDetection.detectChanges();
           },0);
         });
@@ -79,6 +111,20 @@ export class ShedulerComponent {
           }
           this.headRecords.push(dayShed);
       });
+    }
+    
+    onScroll(event: any) {
+      let distance = this.bodyRef.nativeElement.offsetTop - this.bodyRef.nativeElement.scrollTop;
+      if(this.bodyRef.nativeElement.scrollTop > this.maxHeaderHeight / 2) {
+        for(let i = 0; i < this.headersWithMaxHeight.length; i++) {
+          this.headFull[this.headersWithMaxHeight[i]] = false;
+        }
+      }
+      if(distance < this.minHeaderHeight / 2) {
+        for(let i = 0; i < 1000; i++) {
+          this.headFull[i] = false;
+        }
+      }
     }
     
     setHeadFull(i: number) {
