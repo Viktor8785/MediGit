@@ -1,6 +1,6 @@
 # Medi
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.1.
+пациенты записаны к врачам на 25 сентября и на 26 сентября
 
 ## Development server
 
