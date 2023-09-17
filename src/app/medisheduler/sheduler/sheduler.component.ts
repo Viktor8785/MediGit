@@ -20,6 +20,7 @@ export class ShedulerComponent {
   public titleShow = true;
   public headFull: boolean[] = [];
   public headRecords: any = [];
+  private maxFullHeight = 1000;
   private maxHeaderHeight = 1000;
   private minHeaderHeight = 0;
   private headersWithMaxHeight: number[] = [];
@@ -50,7 +51,7 @@ export class ShedulerComponent {
               if(record.nativeElement.clientHeight > max) {
                 max = record.nativeElement.clientHeight;
                 headOfMaxFull = this.shedulerHeads.get(index).nativeElement.clientHeight;
-                this.maxHeaderHeight = max;
+                this.maxFullHeight = max;
               }
             });
             this.headersWithMaxHeight = [];
@@ -71,6 +72,7 @@ export class ShedulerComponent {
             this.shedulerHeads.forEach((head) => {
               if(head.nativeElement.clientHeight > max1) {
                 max1 = head.nativeElement.clientHeight;
+                this.maxHeaderHeight = max1;
               }
             });
             if(max == 0) {
@@ -115,10 +117,13 @@ export class ShedulerComponent {
     
     onScroll(event: any) {
       let distance = this.bodyRef.nativeElement.offsetTop - this.bodyRef.nativeElement.scrollTop;
-      if(this.bodyRef.nativeElement.scrollTop > this.maxHeaderHeight / 2) {
+      if(this.bodyRef.nativeElement.scrollTop > this.maxFullHeight / 2) {
         for(let i = 0; i < this.headersWithMaxHeight.length; i++) {
           this.headFull[this.headersWithMaxHeight[i]] = false;
         }
+        this.shedulerHeads.forEach((head, index) => {
+          this.headMargin[index] = this.maxHeaderHeight - head.nativeElement.clientHeight;
+        });
       }
       if(distance < this.minHeaderHeight / 2) {
         for(let i = 0; i < 1000; i++) {
