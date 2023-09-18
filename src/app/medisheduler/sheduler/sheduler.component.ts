@@ -125,7 +125,7 @@ export class ShedulerComponent {
           this.headMargin[index] = this.maxHeaderHeight - head.nativeElement.clientHeight;
         });
       }
-      if(distance < this.minHeaderHeight / 2) {
+      if(this.bodyRef.nativeElement.scrollTop > this.maxFullHeight - this.minHeaderHeight / 2) {
         for(let i = 0; i < 1000; i++) {
           this.headFull[i] = false;
         }

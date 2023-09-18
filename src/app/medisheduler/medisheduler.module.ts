@@ -5,7 +5,6 @@ import { ResourcesComponent } from './resources/resources.component';
 import { ShedulerComponent } from './sheduler/sheduler.component';
 import { ShrinkDatePipe } from './sheduler/shrink-date.pipe';
 import { ContentComponent } from './content/content.component';
-import { FormsModule } from '@angular/forms';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
@@ -15,6 +14,7 @@ import { ModalAppComponent } from './modal/app/modalapp.component';
 import { ModalInfoComponent } from './modal/info/modalinfo.component';
 import { ModalYesComponent } from './modal/yes/modalyes.component';
 import { ModalDeleteComponent } from './modal/delete/modaldelete.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -31,6 +31,7 @@ import { ModalDeleteComponent } from './modal/delete/modaldelete.component';
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     BsDropdownModule,
     TypeaheadModule,
     BsDatepickerModule,

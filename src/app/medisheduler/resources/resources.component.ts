@@ -10,6 +10,7 @@ import { ruLocale } from 'ngx-bootstrap/locale';
 import { BsDatepickerDirective } from 'ngx-bootstrap/datepicker';
 import { DatepickerDateCustomClasses } from 'ngx-bootstrap/datepicker';
 import { DatepickerDateTooltipText } from 'ngx-bootstrap/datepicker';
+import { FormGroup, FormControl} from '@angular/forms';
 
 @Component({
   selector: 'app-resources',
@@ -49,10 +50,14 @@ export class ResourcesComponent {
   public dateToolTipText: DatepickerDateTooltipText[] = [];
   public datepickerShow = false;
   private changedDate!: Date;
+  public dateEntryForm!: FormGroup;
   @ViewChild('resourcesList') resourcesList!: ElementRef; 
   @ViewChild(BsDatepickerDirective, { static: false }) datepicker?: BsDatepickerDirective;
 
   constructor(private repositoryData: RepositoryDataService, private commonService: CommonService, private localeService: BsLocaleService) {
+    this.dateEntryForm = new FormGroup({
+      dateInput: new FormControl('', []),
+    });
     this.minDate.setDate(this.minDate.getDate());
     defineLocale('ru', ruLocale);
     this.localeService.use('ru');
@@ -93,7 +98,7 @@ export class ResourcesComponent {
     date.getFullYear().toString();
     return value;
   }
-  
+ 
   onDateValueChanged(value: Date) {
     this.changedDate = value;
   }
