@@ -5,5 +5,6 @@
 # Инструкция по запуску Docker
 
 docker build -t medi -f Dockerfile .
+
 docker run -d -p 80:80 medi
 
