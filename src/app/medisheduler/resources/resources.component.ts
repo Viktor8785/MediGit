@@ -53,7 +53,6 @@ export class ResourcesComponent {
   public dateEntryForm!: FormGroup;
   public noMatchesResources = false;
   public noMatchesPatients = false;
-  private selectResourceClick = false;
   @ViewChild('resourcesList') resourcesList!: ElementRef; 
   @ViewChild(BsDatepickerDirective, { static: false }) datepicker?: BsDatepickerDirective;
 
@@ -197,6 +196,7 @@ export class ResourcesComponent {
   }
 
   selectPatient() {
+    this.noMatchesPatients = false;
     let oms = this.patientSelected.slice(this.patientSelected.indexOf(',') + 3);
     this.patients.forEach((patient) => {
       if(patient.userOMS == oms) {
@@ -258,9 +258,8 @@ export class ResourcesComponent {
   }
   
   selectResource() {
-    this.selectResourceClick = true;
+    this.noMatchesResources = false;
     this.resourceSelected = this.resourceSelected.slice(0, this.resourceSelected.indexOf('('));
-    console.log(this.resourceSelected)
     this.resourcesNameList.forEach((resource, index) => {
       if(resource.specName == this.resourceSelected) {
         resource.checked = true;
@@ -268,7 +267,6 @@ export class ResourcesComponent {
         this.makeResourcesForFilter();
         this.repositoryData.filterResources(this.commonService.resources, this.commonService.startDate, this.commonService.dayDuration);
         this.commonService.emitFilter('filter');
-        this.selectResourceClick = false;
         return;
       }
     });
