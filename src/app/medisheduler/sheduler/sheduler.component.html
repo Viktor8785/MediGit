@@ -9,6 +9,7 @@
     </div>
     <div id="sheduler-body"  class="sheduler__body"  #body  (scroll)="onScroll($event)">
         <p class="sheduler__body-title" *ngIf="titleShow">Для просмотра расписания выберите хотя бы один Доступный ресурс</p>
+        <p class="sheduler__body-subtitle" *ngIf="subTitleShow">На выбранный период отсутствуют свободные временные интервалы для записи. Выберите другой период</p>
         <div class="sheduler__resource" *ngFor="let resource of resources; let i = index">
             <div class="sheduler__wrapper" #head>
                 <div class="sheduler__resource-date">{{resource.date | shrinkDate}}</div>

@@ -76,6 +76,7 @@
 }
 
 .resources__input-wrapper {
+    position: relative;
     display: flex;
     margin-left: 10px;
     margin-top: 30px;
@@ -126,6 +127,20 @@
     }
 }
 
+.resource__no-matches {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    width: 255px;
+    padding: 5px;
+    padding-left: 10px;
+    font-size: 15px;
+    border-radius: 5px;
+    background-color: #ffffff;
+    color: #000000;
+    z-index: 2;
+}
+
 .resources__patient-search {
     width: 29px;
     height: 30px;
@@ -164,6 +179,9 @@
     border-radius: 6px 0 0 6px;
     border: 1px solid gray;
     outline: none;
+    &.ng-dirty.ng-invalid {
+        border: 2px solid red; 
+    }
 }
 
 .resources__date-button {

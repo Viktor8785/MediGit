@@ -18,6 +18,7 @@ export class ShedulerComponent {
   private subscr!: Subscription;
   private headMargin: number[] = [];
   public titleShow = true;
+  public subTitleShow = true;
   public headFull: boolean[] = [];
   public headRecords: any = [];
   private maxFullHeight = 1000;
@@ -33,14 +34,22 @@ export class ShedulerComponent {
       {
         this.subscr = commonService.getFilter().subscribe(filter => {
           this.resources = repositoryData.getFilteredResources().sort((a, b) => a.date - b.date);
+          let resourcesSelected = this.commonService.resources;
           for(let i = 0; i < 1000; i++) {
             this.headMargin[i] = 0;
             this.headFull[i] = true;
           }
           if(this.resources.length) {
+            this.subTitleShow = false;
             this.titleShow = false;
           } else {
-            this.titleShow = true;
+            if(resourcesSelected.length) {
+              this.subTitleShow = true;
+              this.titleShow = false;
+            } else {
+              this.titleShow = true;
+              this.subTitleShow = false;
+            }
           }
           this.makeHeadRecords(this.resources);
           setTimeout(() => {

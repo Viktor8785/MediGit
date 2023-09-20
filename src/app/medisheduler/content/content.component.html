@@ -9,6 +9,9 @@
     <ng-template #blapp><div class="content__quote-ba">Нет записи</div></ng-template>
     <ng-template #appointment><div class="content__quote-ap" (click)="onClickAppointment($event)"
          (mouseover)="onMouseOverApp($event)" [ngClass]="{'content__quote-ap--isapp': toolTipShow, 'content__quote-ap--noapp': !toolTipShow}"></div></ng-template>
-    <ng-template #isapp><div class="content__quote-ispatient"  (click)="onClickPatient($event, true)"></div></ng-template>
+    <ng-template #isapp><div class="content__quote-ispatient" [attr.data-name1]="name1" [attr.data-name2]="name2" (click)="onClickPatient($event, true)"></div></ng-template>
+    <!--ng-template #isapp><div class="content__quote-ispatient" (click)="onClickPatient($event, true)" [innerHTML]="html">
+        
+    </div></ng-template-->
     <ng-template #isappquote><div class="content__quote-ispatient-quote"  (click)="onClickPatient($event, false)"></div></ng-template>
 </section>

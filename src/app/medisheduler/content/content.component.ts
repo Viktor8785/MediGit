@@ -63,10 +63,14 @@ export class ContentComponent {
   private patientDataSelected!: UserModel;
   private resourceDataSelected!: any;
   private patientInQuote: boolean = false;
+  public name1 = '';
+  public name2 = '';
+  public html = `<div class='content__insert' >Привет</div>`;
   
 
   constructor(private viewContainerRef: ViewContainerRef, private repositoryData: RepositoryDataService, 
-    private commonService: CommonService, private changeDetector: ChangeDetectorRef, private route: Router,) {
+    private commonService: CommonService, private changeDetector: ChangeDetectorRef, private route: Router,
+    ) {
       this.commonService.resource = this.resource;
   }
 
@@ -363,7 +367,7 @@ export class ContentComponent {
   onMouseOverApp(event: any) {
     this.toolTipContent(event);
   }
-    
+  
   isPatientAppointmentAlowed() {
     let patient = this.commonService.patientSelectedData;
     let intStart = this.intervalDate;
@@ -530,6 +534,8 @@ export class ContentComponent {
               } else {
                 this.view = this.viewContainerRef.createEmbeddedView(this.isapp);
                 this.view.rootNodes[0].textContent = item;
+                console.log(this.view.rootNodes[0].attributes)
+                this.name1 = 'петров';
               }
             } else {
               this.view = this.viewContainerRef.createEmbeddedView(this.appointment);

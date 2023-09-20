@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { RepositoryDataService } from '../service/repository.data.service';
 import { ResourceModel } from '../model/resource.model';
 import { CommonService } from '../shared/common.service';
@@ -51,12 +51,19 @@ export class ResourcesComponent {
   public datepickerShow = false;
   private changedDate!: Date;
   public dateEntryForm!: FormGroup;
+  public noMatchesResources = false;
+  public noMatchesPatients = false;
+  private selectResourceClick = false;
   @ViewChild('resourcesList') resourcesList!: ElementRef; 
   @ViewChild(BsDatepickerDirective, { static: false }) datepicker?: BsDatepickerDirective;
 
-  constructor(private repositoryData: RepositoryDataService, private commonService: CommonService, private localeService: BsLocaleService) {
-    this.dateEntryForm = new FormGroup({
-      dateInput: new FormControl('', []),
+  constructor(private repositoryData: RepositoryDataService, private commonService: CommonService, private localeService: BsLocaleService,
+    private changeDatector: ChangeDetectorRef)
+     {
+    this.commonService.getNoMatchesResources().subscribe((value) => {
+      this.noMatchesResources = value;
+      this.noMatchesPatients = value;
+      this.changeDatector.detectChanges();
     });
     this.minDate.setDate(this.minDate.getDate());
     defineLocale('ru', ruLocale);
@@ -68,7 +75,7 @@ export class ResourcesComponent {
     this.resources = repositoryData.getResources();
     this.resources.forEach((resource) => {
       this.resourcesName.push({spec: resource.resourceSpec, specId: resource.resourceId, specName: resource.resourceName, checked: false});
-      this.resourcesNameSearch.push(resource.resourceName);
+      this.resourcesNameSearch.push(resource.resourceName + '(' + resource.resourceSpec + ')');
       this.specName.add(resource.resourceSpec);
     });
     this.resourcesName.sort((a: ResourcesNameModel, b: ResourcesNameModel) => a.specName.localeCompare(b.specName));
@@ -83,7 +90,25 @@ export class ResourcesComponent {
     this.resourcesNameCopy.sort((a: ResourcesNameModel, b: ResourcesNameModel) => a.spec.localeCompare(b.spec));
     this.resourcesNameList = this.resourcesNameCopy;
   }
+  
+  onChangeDate(event: any) {
+    if(event.target.validity.valid && event.target.value.length) {
+      let date = event.target.value;
+      let dateCurrent = new Date(Number(date.slice(6, 10)), Number(date.slice(3, 5)) - 1, Number(date.slice(0, 2)))
+      this.currentDate = dateCurrent;
+      this.commonService.startDate = dateCurrent;
+      this.repositoryData.filterResources(this.commonService.resources, this.commonService.startDate, this.commonService.dayDuration);
+      this.commonService.emitFilter('filter');
+    }
+  }
 
+  tooltipDateContent() {
+    if(this.commonService.resources.length) {
+      return '';
+    }
+    return 'Выберете доступный ресурс';
+  }
+  
   formatDateToString(date: Date): string {
     let value = '';
     let day = date.getDate().toString();
@@ -101,6 +126,7 @@ export class ResourcesComponent {
  
   onDateValueChanged(value: Date) {
     this.changedDate = value;
+    this.changeDatector.detectChanges();
   }
   
   clickCancelButton() {
@@ -110,6 +136,7 @@ export class ResourcesComponent {
   clickOkButton() {
     this.currentDate = this.changedDate;
     this.currentDateShown = this.formatDateToString(this.currentDate);
+    this.changeDatector.detectChanges();
     this.datepickerShow = false;
     this.commonService.startDate = this.currentDate;
     this.repositoryData.filterResources(this.commonService.resources, this.commonService.startDate, this.commonService.dayDuration);
@@ -206,6 +233,21 @@ export class ResourcesComponent {
     return name;
   }
 
+  resourcesNoResults() {
+    this.noMatchesResources = false;
+    if(this.resourceSelected.length > 4) {
+      this.noMatchesResources = true;
+      this.commonService.noMatchesResources = true;
+    }
+ }
+
+ patientsNoResults() {
+  if(this.patientSelected.length > 4) {
+    this.noMatchesPatients = true;
+    this.commonService.noMatchesPatients = true;
+  }
+}
+  
   scrollToIndex(index: number) {
     this.resourcesList.nativeElement.scrollTop = 0;
     this.resourcesList.nativeElement.scrollTop += 41 * index;
@@ -216,6 +258,9 @@ export class ResourcesComponent {
   }
   
   selectResource() {
+    this.selectResourceClick = true;
+    this.resourceSelected = this.resourceSelected.slice(0, this.resourceSelected.indexOf('('));
+    console.log(this.resourceSelected)
     this.resourcesNameList.forEach((resource, index) => {
       if(resource.specName == this.resourceSelected) {
         resource.checked = true;
@@ -223,6 +268,7 @@ export class ResourcesComponent {
         this.makeResourcesForFilter();
         this.repositoryData.filterResources(this.commonService.resources, this.commonService.startDate, this.commonService.dayDuration);
         this.commonService.emitFilter('filter');
+        this.selectResourceClick = false;
         return;
       }
     });
@@ -319,11 +365,9 @@ export class ResourcesComponent {
         this.currentDate = new Date();
         this.commonService.startDate = this.currentDate;
         this.currentDateShown = this.formatDateToString(this.currentDate);
-        
       }
       this.resourceDisabled = false;
       this.makeAppointmentAbleDates();
-
     } else {
       this.currentDate = undefined;
       this.currentDateShown = '';

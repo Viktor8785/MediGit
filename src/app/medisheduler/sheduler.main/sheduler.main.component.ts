@@ -19,4 +19,11 @@ export class ShedulerMainComponent {
     Object.assign(this.usersData, repositoryData.getUsers());
   }
 
+  noMatches() {
+    if(this.commonService.noMatchesResources || this.commonService.noMatchesPatients) {
+      this.commonService.noMatchesResources = false;
+      this.commonService.noMatchesPatients = false;
+      this.commonService.emitNoMatchesResources(false);
+    }
+  }
 }

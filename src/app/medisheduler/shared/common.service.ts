@@ -8,7 +8,7 @@ import { UserModel } from '../model/user.model';
 export class CommonService {
  
   public filter: EventEmitter<string> = new EventEmitter(true);
-  public modal: EventEmitter<boolean> = new EventEmitter(true);
+  public noMatchesResourcesEmitter: EventEmitter<boolean> = new EventEmitter(true);
   public modalYes: EventEmitter<boolean> = new EventEmitter(true);
   public modalDel: EventEmitter<boolean> = new EventEmitter(true);
   public dayDuration = 1;  
@@ -36,7 +36,8 @@ export class CommonService {
   public intervalDate!: Date;
   public timerModalYes!: any;
   public patientDataSelected!: UserModel;
-
+  public noMatchesResources = false;
+  public noMatchesPatients = false;
   constructor() { }
 
   emitFilter(value: string) {
@@ -45,6 +46,14 @@ export class CommonService {
 
   getFilter() {
     return this.filter;
+  }
+
+  emitNoMatchesResources(value: boolean) {
+    this.noMatchesResourcesEmitter.emit(value);
+  }
+
+  getNoMatchesResources() {
+    return this.noMatchesResourcesEmitter;
   }
   
 }
