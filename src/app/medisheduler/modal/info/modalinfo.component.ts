@@ -21,6 +21,12 @@ export class ModalInfoComponent {
     this.resource = this.commonService.resource;
   }
 
+  selectCabinetNumber() {
+    let start = this.resource.resourceHospital.indexOf('(');
+    let end = this.resource.resourceHospital.lastIndexOf(')');
+    return this.resource.resourceHospital.slice(start + 3, end);
+  }
+  
   onModalInfoClick() {
     this.route.navigateByUrl('/sheduler');
   }

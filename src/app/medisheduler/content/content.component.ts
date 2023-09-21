@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef, EmbeddedViewRef, ViewContainerRef, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, TemplateRef, ElementRef, EmbeddedViewRef, ViewContainerRef, Input, ChangeDetectorRef } from '@angular/core';
 import { RepositoryDataService } from '../service/repository.data.service';
 import { CommonService } from '../shared/common.service';
 import { Subscription } from 'rxjs';
@@ -17,7 +17,9 @@ import { Router } from '@angular/router';
 export class ContentComponent {
   @Input() resource!: any;
   @Input() resources!: any;
-  @Input() index!: any;
+  @Input() index!: number;
+  @Input() scroll!: number;
+  @ViewChild('content') contentRef!: ElementRef<any>;
   @ViewChild('dnwork') dnwork!: TemplateRef<any>;
   @ViewChild('holiday') holiday!: TemplateRef<any>;
   @ViewChild('learning') learning!: TemplateRef<any>;
@@ -29,9 +31,11 @@ export class ContentComponent {
   @ViewChild('appointment') appointment!: TemplateRef<any>;
   @ViewChild('isapp') isapp!: TemplateRef<any>;
   @ViewChild('isappquote') isappQuote!: TemplateRef<any>;
+  @ViewChild('isapptwo') isappTwo!: TemplateRef<any>;
 
   private view!: EmbeddedViewRef<Object>;
   public shedule: string[] = [];
+  public sheduleShema: {time: string, name1: string, name2: string, id1: string, id2: string}[] = [];
   private appPatientName = '';
   public toolTipText = '';
   public toolTipShow = false;
@@ -63,14 +67,25 @@ export class ContentComponent {
   private patientDataSelected!: UserModel;
   private resourceDataSelected!: any;
   private patientInQuote: boolean = false;
+  private name1 = '';
+  private name2 = '';
+  private id1 = '';
+  private id2 = '';
+  private userIdSelect = '';
+  public titlePatient = '';
+  public toolTipDisabled = true;
+  private timer!: any;
  
-
   constructor(private viewContainerRef: ViewContainerRef, private repositoryData: RepositoryDataService, 
     private commonService: CommonService, private changeDetector: ChangeDetectorRef, private route: Router,
     ) {
       this.commonService.resource = this.resource;
   }
 
+  makeSheduleShemaItem() {
+    return {time: '', name1: '', name2: '', id1: '', id2: ''};
+  }
+  
   makeShedule() {
     const workStart = 8;
     const workEnd = 21;
@@ -83,25 +98,30 @@ export class ContentComponent {
     let controlIntResult = '';
     if(this.changeIntToTime(this.resource.workTimeStart) > workStart * 60) {
       this.shedule.push('Врач не принимает');
+      this.sheduleShema.push(this.makeSheduleShemaItem());
+    }
+    if(this.changeIntToTime(this.resource.workTimeStart) < this.changeIntToTime(this.resource.shedule[this.resource.date.getDay()].appointment[0])) {
+      this.shedule.push('Нет записи');
+      this.sheduleShema.push(this.makeSheduleShemaItem());
     }
     for(let i = 0; i < intNumber; i++) {
       currentTime = workStart * 60 + step * i;
       isShedule = false;
       controlIntResult = this.controlIntQuote(this.resource.shedule[this.resource.date.getDay()].doesNotWork, currentTime, step);
       currentText = 'Врач не работает';
-      this.patientInQuote = controlIntPush(controlIntResult, this.shedule, this.patientInQuote);
+      this.patientInQuote = controlIntPush(controlIntResult, this.shedule, this.patientInQuote, this.sheduleShema);
 
       controlIntResult = this.controlIntQuote(this.resource.shedule[this.resource.date.getDay()].learning, currentTime, step);
       currentText = 'Обучение';
-      this.patientInQuote = controlIntPush(controlIntResult, this.shedule, this.patientInQuote);
+      this.patientInQuote = controlIntPush(controlIntResult, this.shedule, this.patientInQuote, this.sheduleShema);
 
       controlIntResult = this.controlIntQuote(this.resource.shedule[this.resource.date.getDay()].documents, currentTime, step);
       currentText = 'Работа с документами';
-      this.patientInQuote = controlIntPush(controlIntResult, this.shedule, this.patientInQuote);
+      this.patientInQuote = controlIntPush(controlIntResult, this.shedule, this.patientInQuote, this.sheduleShema);
 
       controlIntResult = this.controlIntQuote(this.resource.shedule[this.resource.date.getDay()].homeApp, currentTime, step);
       currentText = 'Прием на дому';
-      this.patientInQuote = controlIntPush(controlIntResult, this.shedule, this.patientInQuote);
+      this.patientInQuote = controlIntPush(controlIntResult, this.shedule, this.patientInQuote, this.sheduleShema);
       
       controlIntResult = this.controlIntApp(this.resource.shedule[this.resource.date.getDay()].appointment, currentTime, step, this.resource.resourceAppointment);
       if(!isShedule) {
@@ -114,6 +134,7 @@ export class ContentComponent {
             if(currentShedule != currentText) {
               currentShedule = currentText;
               this.shedule.push(currentShedule);
+              this.sheduleShema.push(this.makeSheduleShemaItem());
             }
           } 
           break;
@@ -122,6 +143,7 @@ export class ContentComponent {
             if(currentShedule != currentText) {
               currentShedule = currentText;
               this.shedule.push(currentShedule);
+              this.sheduleShema.push({time: this.changeTimeToInt(currentTime), name1: this.name1, name2: this.name2, id1: this.id1, id2: this.id2});
             }
           } 
           break;
@@ -130,6 +152,7 @@ export class ContentComponent {
             if(currentShedule != currentText) {
               currentShedule = currentText;
               this.shedule.push(currentShedule);
+              this.sheduleShema.push(this.makeSheduleShemaItem());
             }
           }
           break;
@@ -140,6 +163,7 @@ export class ContentComponent {
           if(currentShedule != currentText) {
               currentShedule = currentText;
               this.shedule.push(currentShedule);
+              this.sheduleShema.push(this.makeSheduleShemaItem());
             }
         }
       }
@@ -147,9 +171,16 @@ export class ContentComponent {
     }
     if(this.changeIntToTime(this.resource.workTimeEnd) < workEnd * 60) {
       this.shedule.push('Врач не принимает');
+      this.sheduleShema.push(this.makeSheduleShemaItem());
+    } else {
+      let length = this.resource.shedule[this.resource.date.getDay()].appointment.length;
+        if(this.changeIntToTime(this.resource.workTimeEnd) > this.changeIntToTime(this.resource.shedule[this.resource.date.getDay()].appointment[length - 1])) {
+        this.shedule.push('Нет записи');
+        this.sheduleShema.push(this.makeSheduleShemaItem());
+      }
     }
-    
-    function controlIntPush(controlIntResult: string, shedule: string[], patientInQuote: boolean) {
+
+    function controlIntPush(controlIntResult: string, shedule: string[], patientInQuote: boolean, sheduleShema: Object[]) {
       switch(controlIntResult) {
         default:
         case 'Нет': {
@@ -165,6 +196,7 @@ export class ContentComponent {
           if(currentShedule != currentText) {
             currentShedule = currentText;
             shedule.push(currentShedule);
+            sheduleShema.push({time: '', name1: '', name2: '', id1: '', id2: ''});
           }
         }
         break;
@@ -172,9 +204,11 @@ export class ContentComponent {
           isShedule = true;
           patientInQuote = false;
           shedule.push('Нет записи');
+          sheduleShema.push({});
           if(currentShedule != currentText) {
             currentShedule = currentText;
             shedule.push(currentShedule);
+            sheduleShema.push({time: '', name1: '', name2: '', id1: '', id2: ''});
           }
         }
         break;
@@ -184,8 +218,10 @@ export class ContentComponent {
           if(currentShedule != currentText) {
             currentShedule = currentText;
             shedule.push(currentShedule);
+            sheduleShema.push({});
           }
           shedule.push('Нет записи');
+          sheduleShema.push({time: '', name1: '', name2: '', id1: '', id2: ''});
         }
         break;
       }
@@ -206,15 +242,21 @@ export class ContentComponent {
       if(intStart <= currentTime && intEnd >= currentTime + step) {
         if(appointment.length) {
           let appPatientNameCurrent: string[] = [];
+          let userIdCurrent: string[] = [];
           let k = 0;
           for( let j = 0; j < appointment.length; j++) {
             if(this.compareDates(appointment[j].appDate, this.resource.date, currentTime)) {
               appPatientNameCurrent[k] = this.findPatient(appointment[j].userId);
+              userIdCurrent[k] = appointment[j].userId;
               k++;
             }
           }
           if(k == 1) {
             this.appPatientName = appPatientNameCurrent[0];
+            this.name1 = appPatientNameCurrent[0];
+            this.id1 = userIdCurrent[0];
+            this.name2 = '';
+            this.id2 = '';
             if(this.appPatientName.length > 14) {
               this.appPatientName = appPatientNameCurrent[0].slice(0, 13) + "\u2026";
             }
@@ -222,6 +264,10 @@ export class ContentComponent {
           }
           if(k >= 2) {
             this.appPatientName = appPatientNameCurrent[0].slice(0, 5) + "\u2026" + ' ' + appPatientNameCurrent[1].slice(0, 5) + "\u2026";
+            this.name1 = appPatientNameCurrent[0];
+            this.id1 = userIdCurrent[0];
+            this.name2 = appPatientNameCurrent[1];;
+            this.id2 = userIdCurrent[1];
             return 'Запись 1'
           }
         }
@@ -362,9 +408,41 @@ export class ContentComponent {
   }
   
   onMouseOverApp(event: any) {
-    this.toolTipContent(event);
+    this.toolTipDisabled = true;
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => {
+      this.toolTipContent(event);
+      this.toolTipDisabled = false;
+      this.changeDetector.detectChanges();
+    }, 1000);
+  }
+
+  onMouseOverPatient(event: any) {
+    let userIds: string[] = [];
+    userIds = this.getUserIds(event);
+    let userIdSelect = userIds[0];
+    if(userIds[1]) {
+      let leftOffset = this.contentRef.nativeElement.offsetLeft;
+      let leftScroll = this.scroll;
+      let leftOffsetBlock = leftOffset - leftScroll;
+      let mouseX = event.clientX;
+      let leftOffsetMouse = mouseX - leftOffsetBlock - 333;
+      if(leftOffsetMouse >= 115) {
+        userIdSelect = userIds[1];
+      }
+    }
+    this.titlePatient = this.repositoryData.getUser(userIdSelect).userName;
   }
   
+  onMouseOverPatientQuote(event: any) {
+    let patients: string[] = [];
+    this.intervalDate = new Date(this.getIntDate(event));
+    this.intervalDate.setSeconds(0);
+    this.intervalDate.setMilliseconds(0);
+    patients= this.checkNumberOfPatients();
+    this.titlePatient = this.repositoryData.getUser(patients[0]).userName;
+  }
+
   isPatientAppointmentAlowed() {
     let patient = this.commonService.patientSelectedData;
     let intStart = this.intervalDate;
@@ -435,12 +513,30 @@ export class ContentComponent {
   
   onClickPatient(event: any, createAllowed: boolean) {
     this.commonService.resource = this.resource;
+    let userIds: string[] = [];
+    userIds = this.getUserIds(event);
+    this.userIdSelect = userIds[0];
+    if(userIds[1]) {
+      let leftOffset = this.contentRef.nativeElement.offsetLeft;
+      let leftScroll = this.scroll;
+      let leftOffsetBlock = leftOffset - leftScroll;
+      let mouseX = event.clientX;
+      let leftOffsetMouse = mouseX - leftOffsetBlock - 333;
+      if(leftOffsetMouse >= 115) {
+        this.userIdSelect = userIds[1];
+      }
+    }
     this.intervalDate = new Date(this.getIntDate(event));
     this.intervalDate.setSeconds(0);
     this.intervalDate.setMilliseconds(0);
     this.commonService.intervalDate = new Date(this.intervalDate);
     this.resourceDataSelected = this.resource;
-    let patients = this.checkNumberOfPatients();
+    let patients: string[] = [];
+    if(createAllowed) {
+      patients = [this.userIdSelect];
+    } else {
+      patients= this.checkNumberOfPatients();
+    }
     this.patientsName = [];
     this.commonService.patientsName = [];
     this.patientsData = [];
@@ -484,9 +580,29 @@ export class ContentComponent {
       this.modalCreate = false;
       this.commonService.modalCreate = this.modalCreate;
     }
+    if(userIds[1]) {
+      this.modalCreate = false;
+      this.commonService.modalCreate = this.modalCreate;
+    }
     this.appExist = true;
     this.commonService.appExist = true;
     this.route.navigateByUrl('sheduler/modalapp');
+  }
+
+  //titlePatient(event: any) {
+  //  return 'Пациент'
+  //}
+  
+  getUserIds(event: any) {
+    let userIds: string[] = [];
+    let intDate = event.target.childNodes[0].textContent.slice(0, 5);
+    this.sheduleShema.forEach((shema) => {
+      if(shema.time == intDate) {
+        userIds[0] = shema.id1;
+        userIds[1] = shema.id2;
+      }
+    });
+    return userIds;
   }
 
   formatDateToString(date: Date): string {
@@ -520,7 +636,7 @@ export class ContentComponent {
   ngAfterViewInit() {
     setTimeout(() => {
       this.makeShedule();
-      this.shedule.forEach((item) => {
+      this.shedule.forEach((item, index) => {
         switch(item) {
           default: {
             if(item.length > 5) {
@@ -531,7 +647,6 @@ export class ContentComponent {
               } else {
                 this.view = this.viewContainerRef.createEmbeddedView(this.isapp);
                 this.view.rootNodes[0].textContent = item;
-                console.log(this.view.rootNodes[0].attributes)
               }
             } else {
               this.view = this.viewContainerRef.createEmbeddedView(this.appointment);

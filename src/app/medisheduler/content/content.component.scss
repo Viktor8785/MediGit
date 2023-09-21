@@ -48,11 +48,13 @@
     padding-left: 10px;
     align-items: center;
     justify-content: left;
-    background-color: #ffffff;
+    background-color: rgba(238, 234, 234);
     color: #000000; 
     border-bottom: 1px dotted #000000;
-    &--noapp:hover {
+    &:hover {
         background-color: #d2ebf5;
+    }
+    &--noapp:hover {
         &::before {
             position: absolute;
             text-align: center;
@@ -70,7 +72,6 @@
         }     
     }
     &--isapp:hover {
-        background-color: #d2ebf5;
         &::before {
             position: absolute;
             top: -30px;

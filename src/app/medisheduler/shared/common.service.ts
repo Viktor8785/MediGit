@@ -38,6 +38,8 @@ export class CommonService {
   public patientDataSelected!: UserModel;
   public noMatchesResources = false;
   public noMatchesPatients = false;
+  public createDisabled = false;
+  
   constructor() { }
 
   emitFilter(value: string) {

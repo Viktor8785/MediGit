@@ -25,6 +25,7 @@ export class ShedulerComponent {
   private maxHeaderHeight = 1000;
   private minHeaderHeight = 0;
   private headersWithMaxHeight: number[] = [];
+  public scrollLeft = 0;
   @ViewChildren('head') shedulerHeads!: QueryList<any>;
   @ViewChildren('full') shedulerFulls!: QueryList<any>;
   @ViewChild('body') bodyRef!: ElementRef;
@@ -33,7 +34,11 @@ export class ShedulerComponent {
      )
       {
         this.subscr = commonService.getFilter().subscribe(filter => {
-          this.resources = repositoryData.getFilteredResources().sort((a, b) => a.date - b.date);
+          this.resources = repositoryData.getFilteredResources().sort((a, b) => {
+            if((a.date - b.date) > 0) return 1;
+            if((a.date - b.date) < 0) return -1;
+            return a.resourceName.localeCompare(b.resourceName);
+          });
           let resourcesSelected = this.commonService.resources;
           for(let i = 0; i < 1000; i++) {
             this.headMargin[i] = 0;
@@ -125,7 +130,7 @@ export class ShedulerComponent {
     }
     
     onScroll(event: any) {
-      let distance = this.bodyRef.nativeElement.offsetTop - this.bodyRef.nativeElement.scrollTop;
+      this.scrollLeft = this.bodyRef.nativeElement.scrollLeft;
       if(this.bodyRef.nativeElement.scrollTop > this.maxFullHeight / 2) {
         for(let i = 0; i < this.headersWithMaxHeight.length; i++) {
           this.headFull[this.headersWithMaxHeight[i]] = false;

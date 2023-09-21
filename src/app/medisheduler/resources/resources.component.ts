@@ -57,12 +57,12 @@ export class ResourcesComponent {
   @ViewChild(BsDatepickerDirective, { static: false }) datepicker?: BsDatepickerDirective;
 
   constructor(private repositoryData: RepositoryDataService, private commonService: CommonService, private localeService: BsLocaleService,
-    private changeDatector: ChangeDetectorRef)
+    private changeDetector: ChangeDetectorRef)
      {
     this.commonService.getNoMatchesResources().subscribe((value) => {
       this.noMatchesResources = value;
       this.noMatchesPatients = value;
-      this.changeDatector.detectChanges();
+      this.changeDetector.detectChanges();
     });
     this.minDate.setDate(this.minDate.getDate());
     defineLocale('ru', ruLocale);
@@ -125,7 +125,7 @@ export class ResourcesComponent {
  
   onDateValueChanged(value: Date) {
     this.changedDate = value;
-    this.changeDatector.detectChanges();
+    this.changeDetector.detectChanges();
   }
   
   clickCancelButton() {
@@ -135,7 +135,7 @@ export class ResourcesComponent {
   clickOkButton() {
     this.currentDate = this.changedDate;
     this.currentDateShown = this.formatDateToString(this.currentDate);
-    this.changeDatector.detectChanges();
+    this.changeDetector.detectChanges();
     this.datepickerShow = false;
     this.commonService.startDate = this.currentDate;
     this.repositoryData.filterResources(this.commonService.resources, this.commonService.startDate, this.commonService.dayDuration);
@@ -160,7 +160,7 @@ export class ResourcesComponent {
     let dateCurrent = new Date();
     let isAble = false;
     this.dateCustomClasses = [];
-    for(let i = 0; i < 14; i++) {
+    for(let i = 0; i < 30; i++) {
       dateCurrent = new Date();
       dateCurrent.setDate(now.getDate() + i);
       isAble = false;
@@ -169,23 +169,14 @@ export class ResourcesComponent {
           let app = resource.shedule[dateCurrent.getDay()].appointment;
           if(app.length) {
             isAble = true;
-            this.dateCustomClasses.push({date: dateCurrent, classes: ['fst-italic', 'fw-bold', 'fs-6']});
+            this.dateCustomClasses.push({date: dateCurrent, classes: ['fw-bold', 'bs__datepicker-able']});
             this.dateToolTipText.push({date: dateCurrent, tooltipText: 'Возможна запись'})
           }
         }
       });
-      if(!isAble) {
-        this.dateCustomClasses.push({date: dateCurrent, classes: ['fs-6']});
+      if(!isAble && i < 14) {
+        this.dateCustomClasses.push({date: dateCurrent, classes: ['bs__datepicker-near']});
       }
-    }
-  }
-  
-  makeCustomDates() {
-    this.dateCustomClasses.push({date: new Date(), classes: ['bg-primary']});
-    for(let i = 1; i <= 14; i++) {
-      let dateCurrent = new Date();
-      dateCurrent.setDate(dateCurrent.getDate() + i);
-      this.dateCustomClasses.push({date: dateCurrent, classes: ['bg-light']});
     }
   }
   
@@ -273,6 +264,7 @@ export class ResourcesComponent {
   }
   
   checkAll() {
+    this.resourceSelected = '';
     this.resourcesNameList.forEach((name) => {
       name.checked = true;
     });
@@ -282,6 +274,7 @@ export class ResourcesComponent {
   }
   
   unCheckAll() {
+    this.resourceSelected = '';
     this.resourcesNameList.forEach((name) => {
       name.checked = false;
     });

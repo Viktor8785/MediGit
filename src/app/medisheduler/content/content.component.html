@@ -1,4 +1,4 @@
-<section class="content">
+<section class="content" #content>
     <ng-template #dnwork><div class="content__quote-dn">Врач не работает</div></ng-template>
     <ng-template #holiday><div class="content__quote-hl">Отпуск</div></ng-template>
     <ng-template #learning><div class="content__quote-ln">Обучение</div></ng-template>
@@ -8,7 +8,7 @@
     <ng-template #dnapp><div class="content__quote-da">Врач не принимает</div></ng-template>
     <ng-template #blapp><div class="content__quote-ba">Нет записи</div></ng-template>
     <ng-template #appointment><div class="content__quote-ap" (click)="onClickAppointment($event)"
-         (mouseover)="onMouseOverApp($event)" [ngClass]="{'content__quote-ap--isapp': toolTipShow, 'content__quote-ap--noapp': !toolTipShow}"></div></ng-template>
-    <ng-template #isapp><div class="content__quote-ispatient" (click)="onClickPatient($event, true)"></div></ng-template>
-    <ng-template #isappquote><div class="content__quote-ispatient-quote"  (click)="onClickPatient($event, false)"></div></ng-template>
+         (mouseover)="onMouseOverApp($event)" [ngClass]="{'content__quote-ap--isapp': toolTipShow && !toolTipDisabled, 'content__quote-ap--noapp': !toolTipShow && !toolTipDisabled}"></div></ng-template>
+    <ng-template #isapp><div class="content__quote-ispatient" [title]="titlePatient" (mouseover)="onMouseOverPatient($event)" (click)="onClickPatient($event, true)"></div></ng-template>
+    <ng-template #isappquote><div class="content__quote-ispatient-quote" [title]="titlePatient" (mouseover)="onMouseOverPatientQuote($event)" (click)="onClickPatient($event, false)"></div></ng-template>
 </section>

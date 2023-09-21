@@ -5,3 +5,48 @@
 
 /* Importing Datepicker SCSS file. */
 @import "node_modules/ngx-bootstrap/datepicker/bs-datepicker";
+
+.bs-datepicker-body table td {
+    color: #000000;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.bs-datepicker-body table td span {
+    border-radius: 0;
+    &:hover {
+        background-color: inherit;
+    }
+}
+
+.bs-datepicker-body table td span.disabled {
+    background-color: rgba(0, 0, 0, 0.10);
+}
+
+.bs__datepicker-able {
+    background-color: #c7e7f7;
+    &:hover {
+        color: #ffffff;
+        background-color: #4988a8 !important;
+    }
+}
+
+.bs__datepicker-near {
+    background-color: #ffffff;
+    &:hover {
+        background-color: inherit;
+    }
+}
+
+.theme-blue .bs-datepicker-body table td span.selected {
+    background-color: inherit;
+    color: #000000;
+    &::before {
+        top: -1px;
+        bottom: 0;
+        left: -1px;
+        right: 0;
+        background-image: url(./assets/circle-svgrepo-com.svg);
+        background-repeat: no-repeat;
+        z-index: 2;
+    }
+}
