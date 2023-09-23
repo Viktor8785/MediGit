@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, ElementRef, ViewChild, ChangeDetectorRef, OnChanges, DoCheck } from '@angular/core';
 import { RepositoryDataService } from '../service/repository.data.service';
 import { ResourceModel } from '../model/resource.model';
 import { CommonService } from '../shared/common.service';
@@ -224,16 +224,17 @@ export class ResourcesComponent {
     return name;
   }
 
-  resourcesNoResults() {
+  resourcesNoResults(event: any) {
     this.noMatchesResources = false;
-    if(this.resourceSelected.length > 4) {
+    if(this.resourceSelected.length >= 4 && event) {
       this.noMatchesResources = true;
       this.commonService.noMatchesResources = true;
     }
  }
 
- patientsNoResults() {
-  if(this.patientSelected.length > 4) {
+ patientsNoResults(event: any) {
+  this.noMatchesPatients = false;
+  if(this.patientSelected.length >= 4 && event) {
     this.noMatchesPatients = true;
     this.commonService.noMatchesPatients = true;
   }
@@ -250,7 +251,6 @@ export class ResourcesComponent {
   
   selectResource() {
     this.noMatchesResources = false;
-    this.resourceSelected = this.resourceSelected.slice(0, this.resourceSelected.indexOf('('));
     this.resourcesNameList.forEach((resource, index) => {
       if(resource.specName == this.resourceSelected) {
         resource.checked = true;
@@ -379,4 +379,11 @@ export class ResourcesComponent {
     this.repositoryData.filterResources(this.commonService.resources, this.commonService.startDate, this.commonService.dayDuration);
     this.commonService.emitFilter('filter');
   }
+  ngDoCheck() {
+    if(this.resourceSelected.includes('(')) {
+      this.resourceSelected = this.resourceSelected.slice(0, this.resourceSelected.indexOf('('));
+    }
+  }
 }
+
+
