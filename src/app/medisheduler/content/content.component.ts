@@ -75,6 +75,7 @@ export class ContentComponent {
   public titlePatient = '';
   public toolTipDisabled = true;
   private timer!: any;
+  private isOverPatient = false;
  
   constructor(private viewContainerRef: ViewContainerRef, private repositoryData: RepositoryDataService, 
     private commonService: CommonService, private changeDetector: ChangeDetectorRef, private route: Router,
@@ -417,7 +418,31 @@ export class ContentComponent {
     }, 1000);
   }
 
+  onMouseMovePatient(event: any) {
+    if(this.isOverPatient) {
+      let userIds: string[] = [];
+      userIds = this.getUserIds(event);
+      let userIdSelect = userIds[0];
+      if(userIds[1]) {
+        let leftOffset = this.contentRef.nativeElement.offsetLeft;
+        let leftScroll = this.scroll;
+        let leftOffsetBlock = leftOffset - leftScroll;
+        let mouseX = event.clientX;
+        let leftOffsetMouse = mouseX - leftOffsetBlock - 333;
+        if(leftOffsetMouse >= 115) {
+          userIdSelect = userIds[1];
+        }
+        this.titlePatient = this.repositoryData.getUser(userIdSelect).userName;
+      }
+    }
+  }
+  
+  onMouseLeavePatient(event: any) {
+    this.isOverPatient = false;
+  }
+
   onMouseOverPatient(event: any) {
+    this.isOverPatient = true;
     let userIds: string[] = [];
     userIds = this.getUserIds(event);
     let userIdSelect = userIds[0];

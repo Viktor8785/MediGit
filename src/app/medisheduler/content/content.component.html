@@ -7,8 +7,9 @@
     <ng-template #ill><div class="content__quote-il">Больничный</div></ng-template>
     <ng-template #dnapp><div class="content__quote-da">Врач не принимает</div></ng-template>
     <ng-template #blapp><div class="content__quote-ba">Нет записи</div></ng-template>
-    <ng-template #appointment><div class="content__quote-ap" (click)="onClickAppointment($event)"
-         (mouseover)="onMouseOverApp($event)" [ngClass]="{'content__quote-ap--isapp': toolTipShow && !toolTipDisabled, 'content__quote-ap--noapp': !toolTipShow && !toolTipDisabled}"></div></ng-template>
-    <ng-template #isapp><div class="content__quote-ispatient" [title]="titlePatient" (mouseover)="onMouseOverPatient($event)" (click)="onClickPatient($event, true)"></div></ng-template>
+    <ng-template #appointment><div class="content__quote-ap" (click)="onClickAppointment($event)" (mouseover)="onMouseOverApp($event)"
+         [ngClass]="{'content__quote-ap--isapp': toolTipShow && !toolTipDisabled, 'content__quote-ap--noapp': !toolTipShow && !toolTipDisabled}"></div></ng-template>
+    <ng-template #isapp><div class="content__quote-ispatient" [title]="titlePatient" (mouseover)="onMouseOverPatient($event)" (mousemove)="onMouseMovePatient($event)"
+        (mouseleave)="onMouseLeavePatient($event)" (click)="onClickPatient($event, true)"></div></ng-template>
     <ng-template #isappquote><div class="content__quote-ispatient-quote" [title]="titlePatient" (mouseover)="onMouseOverPatientQuote($event)" (click)="onClickPatient($event, false)"></div></ng-template>
 </section>
