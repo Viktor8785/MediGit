@@ -164,11 +164,14 @@ export class ResourcesComponent {
       dateCurrent = new Date();
       dateCurrent.setDate(now.getDate() + i);
       isAble = false;
+      let isToolTip = false;
       resourcesChecked.forEach((resource) => {
-        if(resource.workDuration >= i && !isAble) {
+        isToolTip = false;
+        if(resource.workDuration >= i && !isAble && !isToolTip) {
           let app = resource.shedule[dateCurrent.getDay()].appointment;
           if(app.length) {
             isAble = true;
+            isToolTip = true;
             this.dateCustomClasses.push({date: dateCurrent, classes: ['fw-bold', 'bs__datepicker-able']});
             this.dateToolTipText.push({date: dateCurrent, tooltipText: 'Возможна запись'})
           }
